@@ -1,0 +1,38 @@
+﻿The Jurik smoothing includes 3 stages:
+
+
+1st stage - preliminary smoothing by adaptive EMA:
+MA1 = (1-alpha)*Price + alpha*MA1[1];
+2nd stage - one more preliminary smoothing by Kalman filter:
+Det0 = (Price - MA1)*(1-beta) + beta*Det0[1];
+MA2 = MA1 + PR*Det0;
+3rd stage - final smoothing by unique Jurik adaptive filter:
+Det1 = (MA2 - JMA[1]) * (1-alpha)^2 + alpha^2 * Det1[1];
+JMA = JMA[1] + Det1;
+where:
+- Price - Price Series
+- alpha - dynamic factor(will be described below)
+- beta - periodic ratio = 0.45*(Length-1)/(0.45*(Length-1)+2)
+- PR - Phase Ratio: PR = Phase/100 + 1.5 (if Phase < -100 then PR=0.5, if Phase > 100 then PR=2.5).
+
+
+
+The Dynamic Factor is periodic factor (beta) raised to a power
+
+(pow):
+alpha = beta ^ Pow,
+where:
+- pow = rVolty ^ pow1
+- rVolty - relative price volatility
+- pow1 - power of relative volatility with following formula:
+pow1 = len1 - 2 (if pow1 < 0.5 then pow1 = 0.5),
+where len1 - additional periodic factor:
+len1 = Log(SquareRoot(len))/Log(2.0) + 2 (if len1 < 0 then len1 = 0).
+Thus you can see that the Dynamic factor is based on the relative price volatility giving the required
+adaptability for this kind of the price filter.
+The formula for relative price volatility is
+rVolty = Volty/AvgVolty
+(if rVolty > len1^(1/pow1) then rVolty = len1^(1/pow1), if rVolty < 1 then rVolty = 1
+
+под net куча разных библиотек есть...сам по себе вопрос не очень ясен..можете средние медианы использовать, если не нравятся обычные средние или по обьему строить)
+http://www.numerix-dsp.com/siglib.html

@@ -1,0 +1,77 @@
+_SECTION_BEGIN("JCFB");
+//=======Настройки backtesting'а======
+SetTradeDelays(0, 0, 0, 0);
+SetOption("InitialEquity", 6000);
+SetOption("FuturesMode", 1);
+SetOption("AllowSameBarExit", 0);
+SetOption("ActivateStopsImmediately", 0);
+SetOption("CommissionMode", 4);
+SetBarsRequired(100000,100000);
+//TickSize = 0.0001;
+
+//---- input parameters
+Depth=Optimize("Depth",30,1,30,1);
+Lev=Optimize("Lev",0.1,0,0.7,0.01);
+Input_Price_Customs=0;//Выбор цен, по которым производится расчёт индикатора 
+//(0-"Close", 1-"Open", 2-"High+Low", 3-"High", 4-"Low", 5-"Open+High+Low+Close", 6-Open+Close", по умолчанию-2.) 
+//+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS+
+//| Custom indicator initialization function                         |
+//+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS+
+//| JCFBaux CODE                                                     |
+//+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS+
+limit=BarCount-1; 
+JCFBaux=0;
+
+//----+ Выбор цен, по которым производится расчёт индикатора +----------------------+
+     if (Input_Price_Customs==0) Series=Close; 
+else if (Input_Price_Customs==1) Series=Open ;
+else if (Input_Price_Customs==2) Series=High + Low  ;
+else if (Input_Price_Customs==3) Series=High ;
+else if (Input_Price_Customs==4) Series=Low  ;
+else if (Input_Price_Customs==5) Series=Open +High +Low +Close;
+else if (Input_Price_Customs==6) Series=Open +Close; 
+//----+-----------------------------------------------------------------------------+
+  for(b=Depth;b<=BarCount-1;b++)
+  {
+//+++++++++++++++++++++++++++++++++
+    if(b<(BarCount-Depth*2))  
+    {
+     jrc04 = 0;jrc05 = 0;jrc06 = 0;
+      
+      for(count=0;count<=Depth-1;count++)
+       {
+        jrc04 = jrc04 + abs(Series[b-count] - Series[b-count-1]);
+        jrc05 = jrc05 + (Depth + count) * abs(Series[b-count] - Series[b-count-1]);
+        jrc06 = jrc06 + Series[b-count-1];
+       }
+    }     
+    if(b>=(BarCount-Depth*2))   
+    {
+      jrc03 = abs(Series[b] - Series[b-1]);
+      jrc13 = abs(Series[b-Depth] - Series[b-Depth-1]);
+      jrc04 = jrc04 - jrc13 + jrc03;
+      jrc05 = jrc05 - jrc04 + jrc03 * Depth;
+      jrc06 = jrc06 - Series[b-Depth-1] + Series[b-1];
+    }
+    jrc08 = abs(Depth * Series[b] - jrc06);
+    if (jrc05 == 0) Value = 0;   else Value = jrc08/jrc05;
+    JCFB[b] = Value;
+   }
+//+++++++++++++++++++++++++++++++++
+Plot(JCFB,"CFB",6,1);
+Plot(Lev,"",9);
+Buy=Cross(JCFB,Lev);
+Short=Cross(Lev,JCFB);
+Cover=Buy;
+Sell=Short;/**/
+Buy = ExRem(Buy,Sell);
+Sell = ExRem(Sell,Buy);
+Short = ExRem(Short,Cover);
+Cover = ExRem(Cover,Short);
+Filter = Buy OR Sell OR Short OR Cover;
+Plot(Equity(), "Equity",3, 65536);
+PlotShapes(IIf(Buy,shapeUpArrow,shapeNone),colorGreen,0,Lev); 
+PlotShapes(IIf(Sell,shapeHollowDownArrow,shapeNone),colorRed,0,Lev); 
+PlotShapes(IIf(Short, shapeDownArrow,shapeNone),colorRed,0,Lev); 
+PlotShapes(IIf(Cover,shapeHollowUpArrow,shapeNone),colorGreen,0,Lev);
+_SECTION_END();
