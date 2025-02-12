@@ -1,0 +1,66 @@
+TRADING STRATEGY
+
+Adaptive_EU5.cht
+Adaptve JMA CFB
+2009.04.18 11:34:34 PM
+
+
+OPTIMIZATION
+
+Full Optimization
+
+
+LONG ENTRY
+
+Generate a buy long  market order if all of the following are true
++ A<B(Lag(Z Adaptive JMA(Series,Z CFB(Series,Smoothing,SpanSize),LowLimit,HighLimit,NormalizationBars,Phase),Periods Back),Z Adaptive JMA(Series,Z CFB(Series,Smoothing,SpanSize),LowLimit,HighLimit,NormalizationBars,Phase))
+
+
+SHORT ENTRY
+
+Generate a sell short   market order if all of the following are true
++ A>B(Lag(Z Adaptive JMA(Series,Z CFB(Series,Smoothing,SpanSize),LowLimit,HighLimit,NormalizationBars,Phase),Periods Back),Z Adaptive JMA(Series,Z CFB(Series,Smoothing,SpanSize),LowLimit,HighLimit,NormalizationBars,Phase))
+
+
+TRADING STRATEGY PARAMETERS
+
+Trading Rule Optimization
+        Full Optimization - Finds the best rules and the best parameters for each rule.
+
+Size of trades used to evaluate trading strategy
+        Buy a fixed number of units (1 unit)
+
+Other Trading Parameters
+        (none)
+
+Optimization of trading strategy
+        Optimize across 2 weeks of data prior to paper trading
+
+Optimal Evaluation of trading strategy
+        Evaluate optimization across paper trading
+
+Trading of trading strategy
+        Begin 1 day before last date on chart
+        End at last chart date
+
+Entry Commission(s)
+        (none)
+
+Exit Commission(s)
+        (none)
+
+Other costs
+        (none)
+
+Objective used during optmization
+        Maximize Return on Account
+
+Optimization parameters
+        Shortest average trade span = 5 bars
+
+
+TRADING STRATEGY RESULTS SUMMARY
+
+Name	Symbol	Data Set	1yr Ret on Account	Ret on Trades	1yr Ret on Trades	Ret on Account	Net Profit	Gross Profit	Gross Loss	Ratio Gross Profit/Loss	%Profitable Trades	#Trades	#Winning Trades	#Losing Trades	Largest Win	Largest Loss	Avg Trade Profit	Avg Win	Avg Loss	Ratio Avg Win/Avg Loss	Max Consecutive Winners	Max Consecutive Losers	Avg Trade Span	Avg Winning Trade Span	Avg Losing Trade Span	Longest Trade Span	Longest Winning Trade Span	Longest Losing Trade Span	Largest Units Traded	Largest Winning Units Traded	Largest Losing Units Traded	Avg Units Traded	Avg Units Traded	Avg Losing Units Traded	Commissions Paid	Max Drawdown	Max Open Trade Drawdown	Required Account Size	Start Date	End Date	Start Price	End Price	Price Change	% Price Change	% Annual Price Change
+EURUSD	EURUSD	Optimization	190.1%	4.3%	191.7%	4.2%	$ 0.05663	$ 0.17025	$ 0.11362	1.50	43.1%	357	154	200	$ 0.01071	$ 0.0027	$ 0.00	$ 0.00	$ 0.00	1.95	8	11	6 bars	8 bars	4 bars	4 bars	35 bars	15 bars	1	1	1	1	1	1	$ 0.00	$ 0.01328	$ 0.00359	$ 1.33323	2009.04.08 7:15:00 PM	2009.04.16 11:00:00 PM	1.32887	1.31842	-0.01045	-0.8%	-35.2%
+EURUSD	EURUSD	Trading	-18.8%	-0.1%	-19.4%	-0.1%	$ -0.00068	$ 0.02369	$ 0.02437	0.97	37.3%	67	25	39	$ 0.00401	$ 0.00182	$ 0.00	$ 0.00	$ 0.00	1.52	4	7	5 bars	7 bars	4 bars	4 bars	19 bars	9 bars	1	1	1	1	1	1	$ 0.00	$ 0.00874	$ 0.00256	$ 1.32281	2009.04.16 11:05:00 PM	2009.04.17 11:00:00 PM	1.31866	1.30419	-0.01447	-1.1%	-401.9%

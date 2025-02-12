@@ -1,0 +1,68 @@
+/*[[
+   Name := RST_Hilbert_Phase
+   Author := David W Thomas
+   Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+   Notes := Hilbert Phase in "Rocket Science for Traders".
+   Separate Window := Yes
+   First Color := LightGreen
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := No
+   Second Color := Lavender
+   Second Draw Type := Line
+   Second Symbol := 218
+   Minimum Chart Limits := -90.000000
+   Maximum Chart Limits := 360.000000
+]]*/
+Variable : shift(0), prevbars(0), first(True), loopbegin(0),
+         count(0), SmoothPeriod(0), DCPeriod(0),
+         RealPart(0), ImagPart(0), DCPhase(0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars>1 Then first = True;
+
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-6;
+   first = False;
+
+End;
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift=loopbegin Downto 0 Begin
+	SmoothPeriod = iCustom("RST_Homodyne_Discriminator", MODE_SECOND, shift);
+
+	// Compute Dominant Cycle Phase
+	DCPeriod = Floor(SmoothPeriod + 0.5);
+	RealPart = 0;
+	ImagPart = 0;
+	For count = 0 To DCPeriod-1 Begin
+		RealPart += sin(6.2832 * count / DCPeriod) * iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift+count);
+		ImagPart += cos(6.2832 * count / DCPeriod) * iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift+count);
+	End;
+	If abs(ImagPart) > 0 then
+		DCPhase = ArcTan(RealPart / ImagPart) * (180.0 / 3.14159));
+	If abs(ImagPart) <= 0.001 then Begin
+		If RealPart >=0 then
+			DCPhase += 90.0
+		Else
+			DCPhase -= 90.0;
+	End;
+	DCPhase += 90.0;
+
+	// Compensate for one bar lag of the WMA
+	DCPhase += 360.0 / SmoothPeriod;
+
+	If ImagPart < 0 then
+		DCPhase += 180.0;
+	If DCPhase > 315.0 then
+		DCPhase -= 360.0;
+
+   SetIndexValue(shift, DCPhase);
+   loopbegin--;
+End;

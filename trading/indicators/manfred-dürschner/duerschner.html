@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<head>
+<!--
+<link rel="stylesheet" type="text/css" href="../../tools/katex/katex.min.css">
+<script type="text/javascript" src="../../tools/katex/katex.min.js"></script>
+<script type="text/javascript" src="../../tools/katex/contrib/auto-render.min.js"></script>
+-->
+<script type="text/x-mathjax-config"><!-- usage: $\setCounter{-10}$ -->
+  MathJax.Hub.Register.StartupHook("TeX AMSmath Ready", function() {
+    MathJax.InputJax.TeX.Definitions.Add({
+      macros: { setCounter: "setCounter" }
+    }, null, true);
+    MathJax.InputJax.TeX.Parse.Augment({
+      setCounter: function(name) {
+        var num =  parseInt(this.GetArgument(name));
+        MathJax.Extension["TeX/AMSmath"].number = num;
+       }
+    });
+  });
+</script>
+<!-- script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script -->
+<script type="text/javascript" src="../../tools/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full"></script>
+<script type="text/javascript" src="../../js/ConfigMathJax.js"></script>
+
+<script src="../../tools/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="../../css/textbook_aside_blue.css" media="all"/>
+
+<script src="../../js/d3.v5.min.js"></script>
+<script src="../../js/techan.min.js"></script>
+<script src="../../js/charts.js"></script>
+<script src="../../js/lines.js"></script>
+<script src="../../js/counters.js"></script>
+
+<title>dürschner.html</title>
+</head>
+<body>
+
+<h1>Dr. Manfred Dürschner</h1>
+
+<h2 id="durschner.nwma">NWMA: improving recursive moving averages using the Nyquist criterion</h2>
+<p>
+<figure class="right">
+  <img src="img/duerschner.jpg"/>
+  <figcaption>Dr. Manfred Dürschner.</figcaption>
+</figure>
+
+This method was published by Dr. Manfred Dürschner in the 2012 issue of the
+<a href="https://www.ifta.org/publications/journal/">IFTA Journal</a> <cite href="#Duerschner2012"></cite>
+in an article named <q>Moving Averages 3.0</q>.
+</p>
+
+<p>In 1994, Patrick Mulloy introduced an approach to reduce the lag of EMA [Patrick Mulloy: Stocks & Commodities Magazine (February 1994)].
+
+$$TEMA_{\alpha}(x) = 3\cdot EMA_{\alpha}(x) - 3\cdot EMA_{\alpha}(EMA_{\alpha}(x)) + EMA_{\alpha}(EMA_{\alpha}(EMA_{\alpha}(x)))$$
+
+where $\alpha$ is the smoothing factor of the EMA.
+He applied an EMA once and twice to itself and combined the results with the original EMA.
+</p>
+
+<p>In 2001, John Ehlers introduced a moving average with reduced lag in <cite href="#Ehlers2001"></cite>, pp 167-175.
+He used a moving average (SMA, EMA or WMA) and applied this moving average a second time to itself.
+The resulting MA of MA is subtracted from the MA multiplied by the factor 2:
+
+$$ZWMA_{\ell}(x) = 2\cdot MA_{\ell}(x) - MA_{\ell}(MA_{\ell}(x))$$
+
+where $\ell$ is the length of a moving average window.
+</p>
+
+<p>Stating that the application of an moving average to itself can be seen as a sampling procedure,
+Manfred Dürschner concludes that it can be improved using the Nyquist criterion.
+</p>
+
+<p>The sampled signal is a moving average (referred to as $MA_{1}$) and the sampling signal is a moving average as well (referred to as $MA_{2}$).
+If we want to avoid the aliasing (additional periodic cycles which are not included in the time series), the sampling must obey the Nyquist criterion.
+</p>
+
+<p>With the cycle period as parameter, the Nyquist criterion reads as $\frac{\ell_{1}}{\ell_{2}} = \lambda \geq 2$.
+Here $\ell_{1}$ is the cycle period of the sampled signal to which another sampling signal with cycle period $\ell_{2}$ is applied;
+$\ell_{1}$ must be at least twice as large as $\ell_{2}$.
+In Mulloy's and Ehlers' approaches both cycle periods are equal.
+</p>
+
+<figure id="durschner.nwma.fig1" class="left" style="width:40%">
+  <img src="img/ita_journal_2012_moving_averages_3.0.png" width="100%"/>
+  <figcaption>
+    In a fairly good approximation holds $\varphi_{1} = \varphi_{2}$.
+    From this $D_{1}/L_{1} = D_{2}/L_{2}$, $D_{1} = x - MA_{1}$ and $D_{2} = MA_{1} - MA_{2}$.
+  </figcaption>
+</figure>
+
+<p>In  <a href="#durschner.nwma.fig1">xxx</a>, we see a price series $x$ (black line),
+the first moving average $MA_{1}$ (red line) with a lag $L_{1}$ to the $x$ and
+the second moving average $MA_{1}$ (blue line) with a lag $L_{2}$ to the  $MA_{1}$.
+Based on fairly good approximation $\varphi_{1} = \varphi_{2}$,
+$D_{1}/L_{1} = D_{2}/L_{2}$, where $D_{1} = x - MA_{1}$ and $D_{2} = MA_{1} - MA_{2}$.
+From this, the following equation holds:
+
+$$\frac{D_{1}}{D_{2}} = \frac{x - MA_{1}}{MA_{1} - MA_{2}} = \frac{L_{1}}{L_{2}} .$$
+
+Denoting $\alpha \equiv \frac{L_{1}}{L_{2}}$ and replacing $x$ with the approximation term NWMA
+(the notation for the New Weighted Moving Average), we can re-write the expression above as
+
+$$NWMA = (1 + \alpha)MA_{1} - \alpha MA_{2} .$$
+
+Let us recall now values of the lag for different moving averages with a window length $\ell$ in <cite href="#Ehlers2001"></cite>.
+
+$$\begin{array}{lcl} L_{SMA} & = & \frac{1}{2}(\ell - 1) \\
+ L_{WMA} & = & \frac{1}{3}(\ell - 1) \\ L_{EMA} & = & \frac{1}{\alpha} - 1 \end{array}$$
+
+Note that with $\alpha = \frac{2}{\ell - 1}$ we get the same EMA lag as for the SMA.
+According to these equations, $\frac{L_{1}}{L_{2}}$ can be written as
+
+$$\alpha \equiv \frac{L_{1}}{L_{2}} = \frac{\ell_{1} - 1}{\ell_{2} - 1} .$$
+
+In this expression, concludes Dr. Dürschner, denominator 2 for the SMA and EMA as well as denominator 3 for the WMA are missing;
+$\alpha$ is therefore valid for all three moving averages.
+Using the Nyquist criterion $\ell_{2} = \ell_{1} / \lambda$, we get
+
+$$\alpha = \frac{\ell_{1} - 1}{\ell_{2} - 1} = \frac{\ell_{1} - 1}{\frac{\ell_{1}}{\lambda} - 1} = \lambda \frac{\ell_{1} - 1}{\ell_{1} - \lambda},\ \ \lambda \geq 2 .$$
+
+Combining both expressions for NWMA and $\alpha$, we can finally write
+
+$$NWMA_{\ell_{1},\ell_{2}}(x) = (1 + \alpha)MA_{1, \ell_{1}}(x) - \alpha MA_{2,\ell_{2}}(MA_{1, \ell_{1}}(x)),\ \ \alpha = \frac{\ell_{1} - 1}{\ell_{2} - 1}, \ell_{2} = \ell_{1} / \lambda,\ \ \lambda \geq 2$$
+
+using $\ell_{1}$ and $\ell_{2}$ parameters. Alternatively, we can use $\lambda$ parameter instead of the $\ell_{2}$:
+
+$$NWMA_{\ell_{1},\lambda}(x) = (1 + \alpha)MA_{1, \ell_{1}}(x) - \alpha MA_{2,\lambda\ell_{1}}(MA_{1, \ell_{1}}(x)),\ \ \alpha = \lambda \frac{\ell_{1} - 1}{\ell_{1} - \lambda},\ \ \lambda \geq 2 .$$
+
+These equation, continues Dr. Dürschner, are independent of the choice of an moving average (he means probably only SMA, WMA, and EMA).
+As the WMA shows the smallest lag ($(\frac{\ell - 1}{3}$), it should generally be the first choice for the NWMA.</p>
+
+<p>When $\ell_{1} = \ell_{1}$, $\alpha = 1$ and $\lambda = 1$, respectively.
+Then the NWMA equation passes into Ehlers´ formula.
+Thus Ehlers´ formula from <cite href="#Ehlers2001"></cite> is included in the NWMA as a limiting value.</p>
+
+<p>It follows from a short calculation that the lag for NMA results in a theoretical value zero.
+</p>
+
+<p>&nbsp;
+</p>
+
+<h1 class="counter-skip">References</h1>
+<citedSource id='Duerschner2012'>Dürschner, Manfred G. (2012). <em>Moving Averages 3.0</em>. IFTA Journal, vol. 12 pp. 27-31. ISSN:2409-0271 <a href="http://ifta.org/public/files/journal/d_ifta_journal_12.pdf">online</a> <a href="offline/ifta_journal_2012_moving_averages_3.0.pdf">offline</a></citedSource>
+<citedSource id='Ehlers2001'>Ehlers, John F. (2001). <em>Rocket Science for Traders: Digital Signal Processing Applications</em>. Wiley, 2001. ISBN:9780471405672 <a href="https://books.google.nl/books?id=K9F1rgEACAAJ">online</a> <a href="offline/ehlers2001.pdf">offline</a></citedSource>
+
+<p>
+https://www.tradingview.com/script/is0c2vTu-Moving-Average-3-0-3rd-Generation/
+https://futures.io/attachments/41061d1308131522
+https://www.mql5.com/en/code/1032
+https://www.vtad.de/online-tutorials/
+https://www.vtad.de/wp-content/uploads/2017/02/Rei%C3%9F_EmpiricalModeDecomposition.pdf
+https://www.juergen-abel.info/files/preprints/preprint_emd_for_technical_analysis_pdf_00.pdf
+http://www.instmath.rwth-aachen.de/Preprints/maierpaape20130415.pdf
+</p>
+
+<script type="text/javascript" src="../js/non_phantomjs_screen.js"></script>
+<!--
+<script type="text/javascript" src="../js/non_phantomjs_screen_katex.js"></script>
+<script>
+renderMathInElement( // katex
+          document.body,
+          {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "\\[", right: "\\]", display: true},
+                  {left: "$", right: "$", display: false},
+                  {left: "\\(", right: "\\)", display: false}
+              ]
+          }
+      );
+</script>
+-->
+</body>
+</html>

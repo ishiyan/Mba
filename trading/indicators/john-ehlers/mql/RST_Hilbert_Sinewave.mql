@@ -1,0 +1,45 @@
+/*[[
+   Name := RST_Hilbert_Sinewave
+   Author := David W Thomas
+   Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+   Notes := Hilbert Sinewave in "Rocket Science for Traders".
+   Separate Window := Yes
+   First Color := LightGreen
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := Yes
+   Second Color := Lavender
+   Second Draw Type := Line
+   Second Symbol := 218
+   Minimum Chart Limits := -1.000000
+   Maximum Chart Limits := 1.000000
+]]*/
+Variable : shift(0), prevbars(0), first(True), loopbegin(0),
+         DCPhase(0), sw1(0), sw2(0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars>1 Then first = True;
+
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-6;
+   first = False;
+
+End;
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift=loopbegin Downto 0 Begin
+	DCPhase = iCustom("RST_Hilbert_Phase", MODE_FIRST, shift);
+
+	sw1 = sin(DCPhase*3.14159/180.0);
+	sw2 = sin((DCPhase + 45.0)*3.14159/180.0);
+
+   SetIndexValue(shift, sw1);
+   SetIndexValue2(shift, sw2);
+   loopbegin--;
+End;

@@ -1,0 +1,71 @@
+// Created by Starlight (extesy@yandex.ru). Don't remove this line even if you do conversion to EL,MQL etc!
+// Translated By Nikki21
+/*[[
+	Name := JCFBaux
+	Author := Nikki21
+	Separate Window := Yes
+	First Color := Blue
+	First Draw Type := Line
+	First Symbol := 217
+	Use Second Data := No
+	Second Color := Red
+	Second Draw Type := Line
+	Second Symbol := 218
+]]*/
+
+inputs: Depth(15), BarsCount(300), Mode(0);
+
+var: Bar(0);
+var: Value(0);
+
+var: jrc04(0), jrc05(0), jrc06(0), jrc08(0);
+var: jrc03(0), jrc03temp(0), jrc07(0);
+
+var: BarCount(0);
+
+BarCount=Bars;
+if BarsCount<BarCount then BarCount=BarsCount;
+
+SetLoopCount(0);
+
+value=0;  
+for Bar=1 to BarCount-1 {
+  if Bar>=Depth then {
+    if Bar <= Depth*2 then {
+      jrc04 = 0;
+      jrc05 = 0;
+      jrc06 = 0;
+      for jrc07 = 0 to Depth-1 {
+        if Mode=1 then {
+          jrc04 = jrc04 + abs((H[Bar-jrc07] + L[Bar-jrc07]) - (H[Bar-jrc07-1] + L[Bar-jrc07-1]));
+          jrc05 = jrc05 + (Depth - jrc07) * abs((H[Bar-jrc07] + L[Bar-jrc07]) - (H[Bar-jrc07-1] + L[Bar-jrc07-1]));
+          jrc06 = jrc06 + (H[Bar-jrc07-1] + L[Bar-jrc07-1]);
+        } else {
+          jrc04 = jrc04 + abs(C[Bar-jrc07] - C[Bar-jrc07-1]);
+          jrc05 = jrc05 + (Depth - jrc07) * abs(C[Bar-jrc07] - C[Bar-jrc07-1]);
+          jrc06 = jrc06 + C[Bar-jrc07-1];
+        }
+      }
+    } else {
+      if Mode=1 then {
+        jrc05 = jrc05 - jrc04 + abs((H[Bar] + L[Bar]) - (H[Bar-1]+ L[Bar-1])) * Depth;
+        jrc04 = jrc04 - 
+                abs((H[Bar-Depth] + L[Bar-Depth]) - (H[Bar-Depth-1] + L[Bar-Depth-1])) + 
+                abs((H[Bar] + L[Bar]) - (H[Bar-1] + L[Bar-1]));
+        jrc06 = jrc06 - (H[Bar-Depth-1] + L[Bar-Depth-1]) + (H[Bar-1] + L[Bar-1]);
+      } else {
+        jrc05 = jrc05 - jrc04 + abs(C[Bar] - C[Bar-1]) * Depth;
+        jrc04 = jrc04 - abs(C[Bar-Depth] - C[Bar-Depth-1]) + abs(C[Bar] - C[Bar-1]);
+        jrc06 = jrc06 - C[Bar-Depth-1] + C[Bar-1];
+      }
+    }
+    if Mode=1 then {
+      jrc08 = abs(Depth * (H[Bar] + L[Bar]) - jrc06);
+    } else {
+      jrc08 = abs(Depth * C[Bar] - jrc06);
+    }
+    if jrc05=0 then Value=0 else Value=jrc08/jrc05;
+  }
+  SetIndexValue(Bar, Value);
+}
+

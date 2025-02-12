@@ -1,0 +1,52 @@
+Classic
+-------------------
+        public SwamiAroon(int maxLookback, int minLookback)
+        public SwamiCCI(double alpha, int maxLookback, int minLookback)
+
+public SwamiRSI(double alpha, int maxLookback, int minLookback)
+(periods 0 - 40)        
+
+
+public SwamiStochastics(int maxLookback, int minLookback)
+Min Period Length = Math.Min(Math.Max(6, value), 24); // 6 <= * <= 24
+Max Period Length = Math.Min(Math.Max(24, value), 48); // 24 <= * <= 48
+Bearish Color = red
+Bulish Color = green
+Neutral Color = yellow
+Stochastics(3, x + minLength, 3)[0] * 0.01
+
+
+Essentials 
+------------------------
+Swami Accum/Distrib
+
+public SwamiWave(int maxLength, int minLength, Color bearishColor, Color bulishColor, Color neutralColor)
+Min Period Length = Math.Min(Math.Max(8, value), 24); // 8 <= * <= 24
+Max Period Length = Math.Min(Math.Max(32, value), 48); // 32 <= * <= 48
+Bearish Color = orange
+Bulish Color = blue
+Neutral Color = transparent
+BPF(x + minLength)[0]
+
+
+Swami Predict
+Swami Volume
+shows smoothed volume deviations from recent averages. (0 - 40)
+
+SwamiCharts Advanced
+-------------------------------
+Swami Convolution
+Swami Laguerre Trend
+Swami Relative Performance
+Swami SwingWave
+
+Swami Volatility
+picture of volatility by comparing the current true range of price movement to the average true range
+over a range of filtering periods from 12 to 48 bars.   (0 - 40)
+Higher volatility is indicated in light blue and lower volatility is indicated in darker blue. 
+
+SwamiCharts Daytrader
+---------------------------------
+Swami Intraday Fisher
+Swami Intraday Impulse
+Swami Intraday Volume

@@ -1,0 +1,493 @@
+From: <Saved by UnMHT>
+Subject: =?iso-2022-jp?B?RGV0cmVuZGVkIEZsdWN0dWF0aW9uIEFuYWx5c2lzIChERkEp?=
+Date: Fri, Mar 26 2010 15:07:55 GMT+0100
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="----=_NextPart_000_0000_D3001684.5999C737";
+	type="text/html"
+
+------=_NextPart_000_0000_D3001684.5999C737
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.physionet.org/physiotools/dfa/
+
+=EF=BB=BF<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html=
+; charset=3Dutf-8">
+
+<title>Detrended Fluctuation Analysis (DFA)</title>
+<base href=3D"http://www.physionet.org/physiotools/dfa/"></base></head><bod=
+y bgcolor=3D"white">
+
+<script type=3D"text/javascript" language=3D"JavaScript">
+<!--
+function expand(thistag, tag) {
+   styleObj=3Ddocument.getElementById(thistag).style;
+   if (styleObj.display=3D=3D'none')
+   {
+   	styleObj.display=3D'';
+	tag.innerHTML =3D "&nbsp;<b><tt>-</tt></b>&nbsp;";
+   }
+   else {
+   	styleObj.display=3D'none';
+    tag.innerHTML =3D "&nbsp;<b><tt>+</tt></b>&nbsp;";
+   }
+}
+//-->
+</script>
+<style type=3D"text/css">
+@import url(/physiotools.css);
+</style>
+<table width=3D"100%" cellspacing=3D"0" cellpadding=3D"2" border=3D"0">
+  <tbody><tr bgcolor=3D"#c04040">
+    <td width=3D"3" bgcolor=3D"#803030" align=3D"left"><font color=3D"white=
+">
+      <div onclick=3D"expand(&#x27;droplinks&#x27;,this);" id=3D"div1">&nbs=
+p;<b><tt>-</tt></b>&nbsp;</div></font></td>
+       =20
+    <td align=3D"right"><font color=3D"white"><b>
+      <a href=3D"/site-map.shtml"><font color=3D"white">PhysioNet</font></a>
+	 &nbsp;=C2=B7&nbsp;=20
+      <a href=3D"/physiobank/"><font color=3D"white">PhysioBank</font></a>
+	 &nbsp;=C2=B7&nbsp;
+      <a href=3D"/physiotools/"><font color=3D"white">PhysioToolkit</font><=
+/a></b>
+    </font></td></tr>
+</tbody></table>
+<table width=3D"100%" cellspacing=3D"0" cellpadding=3D"2" border=3D"0" styl=
+e=3D"" id=3D"droplinks">
+  <tbody><tr bgcolor=3D"#ffe0e0">
+    <td align=3D"left"><h2><a style=3D"text-decoration: none;" href=3D"/phy=
+siotools/">
+	  <font color=3D"#c04040">PhysioToolkit</font><br>
+	  <font size=3D"-1" color=3D"#c04040">open source software for<br>
+	    biomedical science and engineering</font></a></h2>
+    </td>
+  <td align=3D"right">
+<!-- Google CSE Search Box Begins  -->
+<form id=3D"searchbox_007405203507124691154:xfntrbzi-tu" action=3D"http://p=
+hysionet.org/search-results.shtml">
+  <input type=3D"hidden" name=3D"cx" value=3D"007405203507124691154:xfntrbz=
+i-tu"></input>
+  <input type=3D"hidden" name=3D"cof" value=3D"FORID:11"></input>
+  <input type=3D"text" size=3D"25" name=3D"q" value=3D""></input>
+  <input type=3D"submit" name=3D"sa" value=3D"Search"></input>
+</form>
+<script src=3D"http://www.google.com/coop/cse/brand?form=3Dsearchbox_007405=
+203507124691154%3Axfntrbzi-tu" type=3D"text/javascript"></script>
+<!-- Google CSE Search Box Ends -->
+<a href=3D"/search.shtml">Advanced Search</a>&nbsp;|
+<a href=3D"/physiotour/">Tour</a>&nbsp;|
+<a href=3D"/mirrors/">Mirrors</a><br>
+<a href=3D"/citations.shtml">How to Cite</a>&nbsp;|
+<a href=3D"/guidelines.shtml">Contributing</a>&nbsp;|
+<a href=3D"/faq.shtml">FAQ</a>
+  </td>
+  </tr>
+
+  <tr><td bgcolor=3D"#c04040" align=3D"center" colspan=3D"2"><font color=3D=
+"white"><b>
+    <a href=3D"/physiotools/getting-started.shtml"><font color=3D"white">Ge=
+tting&nbsp;Started</font></a>
+	 &nbsp;=C2=B7&nbsp;
+    <a href=3D"/physiotools/software-index.shtml"><font color=3D"white">Sof=
+tware&nbsp;Index</font></a>
+	 &nbsp;=C2=B7&nbsp;=20
+    <a href=3D"/physiotools/matlab/"><font color=3D"white">Matlab&nbsp;Soft=
+ware</font></a>
+	 &nbsp;=C2=B7&nbsp;
+    <a href=3D"/physiotools/wfdb.shtml"><font color=3D"white">WFDB&nbsp;Sof=
+tware</font></a>
+	 &nbsp;=C2=B7&nbsp;
+    <a href=3D"/physiotools/manuals.shtml"><font color=3D"white">Manuals</f=
+ont></a>
+	 &nbsp;=C2=B7&nbsp;
+    <a href=3D"/site-map.shtml"><font color=3D"white">Site&nbsp;Map</font><=
+/a></b></font>
+    </td>
+  </tr>
+</tbody></table>
+
+
+<h1>Detrended Fluctuation Analysis (DFA)</h1>
+
+<p>
+</p><center><table bgcolor=3D"lightblue">
+<tbody><tr><td>
+This method was first proposed in:
+Peng C-K, Buldyrev SV, Havlin S, Simons M, Stanley HE, Goldberger AL.
+<a target=3D"other" href=3D"http://prola.aps.org/abstract/PRE/v49/i2/p1685_=
+1">
+Mosaic organization of DNA nucleotides.</a>
+<i>Phys Rev E</i> 1994;<b>49</b>:1685-1689.
+<p>
+A detailed description of the algorithm and its application to physiologic
+signals can be found in:
+Peng C-K, Havlin S, Stanley HE, Goldberger AL.
+<a target=3D"other" href=3D"http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?c=
+md=3DRetrieve&amp;db=3DPubMed&amp;list_uids=3D11538314&amp;dopt=3DAbstract"=
+>Quantification of scaling
+exponents and crossover phenomena in nonstationary heartbeat time series.</=
+a>
+<i>Chaos</i> 1995;<b>5</b>:82-87.
+</p><p>
+<b>Please cite at least one of the above publications when referencing this
+material, and also include the standard citation for PhysioNet:</b>
+</p><p>
+Goldberger AL, Amaral LAN, Glass L, Hausdorff JM, Ivanov PCh, Mark RG,
+Mietus JE, Moody GB, Peng C-K, Stanley HE.  PhysioBank, PhysioToolkit, and
+PhysioNet: Components of a New Research Resource for Complex Physiologic
+Signals.
+<i>Circulation</i> <b>101</b>(23):e215-e220 [Circulation Electronic Pages;
+<a target=3D"other" href=3D"http://circ.ahajournals.org/cgi/content/full/10=
+1/23/e215">http://circ.ahajournals.org/cgi/content/full/101/23/e215</a>];
+2000 (June 13).=20
+</p></td></tr>
+</tbody></table></center>
+
+<p>
+The method of detrended fluctuation analysis has proven useful in
+revealing the extent of long-range correlations in time series.
+Briefly, the time series to be analyzed (with <i>N</i> samples) is
+first integrated.  Next, the integrated time series is divided into
+boxes of equal length, <i>n</i>. In each box of length <i>n</i>, a
+least squares line is fit to the data (representing the <i>trend</i>
+in that box).  The <i>y</i> coordinate of the straight line segments
+is denoted by <i>y<sub>n</sub>(k)</i>. =20
+
+</p><p>
+Next, we detrend the integrated time series, <i>y</i>(<i>k</i>), by
+subtracting the local trend, <i>y<sub>n</sub>(k)</i>, in each box. The
+root-mean-square fluctuation of this integrated and detrended time
+series is calculated by
+
+</p><p>
+<img alt=3D"F(n) =3D ((1/N)(Sum (from k=3D1 to N) of ((y(k) - yn(k))**2)))*=
+*.5" src=3D"dfa.png">
+
+</p><p>
+This computation is repeated over all time scales (box sizes) to
+characterize the relationship between <i>F</i>(<i>n</i>), the average
+fluctuation, and the box size, <i>n</i>.  Typically, <i>F</i>(<i>n</i>)
+will increase with box size. A linear relationship on a
+log-log plot indicates the presence of power law (fractal)
+scaling. Under such conditions, the fluctuations can be characterized
+by a scaling exponent, the slope of the line relating log <i>F(n)</i>
+to log <i>n</i>.
+
+</p><h2>Software for DFA</h2>
+<p>
+The file <a href=3D"dfa.c">dfa.c</a> is the C language source for a program=
+ that
+performs detrended fluctuation analysis of a time series.  Read about how to
+use this program <a href=3D"dfa-1.htm">here</a> (or download this informati=
+on in
+Unix <tt>man</tt> page format <a href=3D"dfa.1">here</a>).
+
+</p><p>
+The instructions below assume that you already have a C compiler, such as=
+ <a target=3D"other" href=3D"http://gcc.gnu.org/">gcc</a>, and a <tt>make</=
+tt> utility,
+such as <a target=3D"other" href=3D"http://www.gnu.org/software/make/">GNU
+make</a>.  Most GNU/Linux and Unix systems have these already.  Under
+MS-Windows,we recommend the versions of <tt>gcc</tt> and <tt>make</tt>
+included in the free <a href=3D"/physiotools/cygwin/">Cygwin</a>
+development environment;  under Mac OS X, use the versions included in Appl=
+e&#x27;s
+XCode tools.
+
+</p><ul>
+<li> Download <a href=3D"dfa.c">dfa.c</a>, <a href=3D"Makefile">Makefile</a=
+>,
+ a sample input file (<a href=3D"rr-intervals">rr-intervals</a>), and
+the corresponding output file (<a href=3D"rr-dfa">rr-dfa</a>).
+</li><li> Build <tt>dfa</tt> by typing:
+<pre>make
+</pre>
+</li><li> Test the compiled <tt>dfa</tt> by typing:
+<pre>make check
+</pre>
+</li><li> If <tt>dfa</tt> passes the test, install it by typing:
+<pre>make install
+</pre>
+</li></ul>
+
+<p>
+If you wish to use some other C compiler, compile <tt>dfa.c</tt> and link it
+with the standard C math library, using whatever method is standard for you=
+r C
+compiler.  See <a href=3D"Makefile">Makefile</a> to see how to test the exe=
+cutable
+file that you compile.
+
+
+</p><h2>Further information</h2>
+
+<p>
+<a href=3D"/tutorials/fmnc/node5.html">Learn more</a> about applications of
+DFA to physiologic time series in our tutorial, <a href=3D"/tutorials/fmnc/=
+">Fractal Mechanisms in Neural Control</a>.  Also
+see the references at the top of this page.
+
+</p><p>
+Two papers also available here discuss the effects of
+<a href=3D"/physiobank/database/synthetic/tns/paper1/">trends</a> and
+<a href=3D"/physiobank/database/synthetic/tns/paper2/">nonstationarities</a>
+on DFA.
+
+</p><p>
+As of September, 2004, the two original papers describing the DFA method
+had been cited by <a href=3D"citations.shtml">470 research articles (listed
+here)</a>.
+
+</p><hr>
+<table width=3D"100%" cellpadding=3D"5"><tbody><tr><td bgcolor=3D"#c04040"=
+ align=3D"center">
+<a href=3D"http://physionet.org/cgi-bin/feedback">
+<font color=3D"white"><b>Send feedback about this page to PhysioNet</b></fo=
+nt></a>
+</td></tr></tbody></table>
+<table cellpadding=3D"10"><tbody><tr><td>
+<font size=3D"-1"></font><p>
+<font size=3D"-1">Your comments and suggestions are welcome.  We encourage=
+ you to use our
+<a href=3D"http://physionet.org/cgi-bin/feedback">feedback form</a> to comm=
+ent
+on this page.  If you would like to receive a reply, please send your
+comments by email to
+<a href=3D"mailto:webmaster@physionet.org?subject=3Dhttp://www.physionet.or=
+g/physiotools/dfa/">
+<tt>webmaster@physionet.org</tt></a>,=20
+or post them to:
+</font></p><center>
+<font size=3D"-1"><i><address>
+PhysioNet<br>
+MIT Room E25-505A<br>
+77 Massachusetts Avenue<br>
+Cambridge, MA 02139 USA<br></address></i>
+</font></center>
+<font size=3D"-1"></font></td><td>
+<img border=3D"0" align=3D"right" usemap=3D"#nih" src=3D"/nibib+nih+nigms.g=
+if"></td></tr>
+</tbody></table>
+<p>
+Updated=20
+
+Sunday, 06-May-2007 09:55:59 EDT
+<map name=3D"nih">
+ <area alt=3D"National Institute of Biomedical Imaging and Bioengineering"=
+ target=3D"other" href=3D"http://www.nibib.nih.gov/" coords=3D"0,0,160,100"=
+ shape=3D"rect"></area>
+ <area alt=3D"National Institutes of Health" target=3D"other" href=3D"http:=
+//www.nih.gov/" coords=3D"170,0,230,100" shape=3D"rect"></area>
+ <area alt=3D"National Institute of General Medical Sciences" target=3D"oth=
+er" href=3D"http://www.nigms.nih.gov/" coords=3D"240,0,370,100" shape=3D"re=
+ct"></area>
+</map>
+
+</p></body></html>
+------=_NextPart_000_0000_D3001684.5999C737
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.physionet.org/physiotools.css
+
+H1 {text-align: center;}
+H1,H2,H3 {color:#c04040; background:#ffe0e0; padding:5px;}
+H1,H2,H3,H4,H5,H6 { font-family: 'New Century Schoolbook', Garamond, serif;=
+ }
+PRE {background:#ffffe0}
+
+
+------=_NextPart_000_0000_D3001684.5999C737
+Content-Type: text/javascript
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.google.com/coop/cse/brand?form=searchbox_007405203507124691154%3Axfntrbzi-tu
+
+
+(function() {
+var f =3D document.getElementById('searchbox_007405203507124691154:xfntrbzi=
+-tu');
+if (!f) {
+f =3D document.getElementById('searchbox_demo');
+}
+if (f && f.q) {
+var q =3D f.q;
+var n =3D navigator;
+var l =3D location;
+var su =3D function () {
+var u =3D document.createElement('input');
+var v =3D document.location.toString();
+var existingSiteurl =3D /(?:[?&]siteurl=3D)([^&#]*)/.exec(v);
+if (existingSiteurl) {
+v =3D decodeURI(existingSiteurl[1]);
+}
+var delimIndex =3D v.indexOf('://');
+if (delimIndex >=3D 0) {
+v =3D v.substring(delimIndex + '://'.length, v.length);
+}
+u.name =3D 'siteurl';
+u.value =3D v;
+u.type =3D 'hidden';
+f.appendChild(u);
+};
+if (n.appName =3D=3D 'Microsoft Internet Explorer') {
+var s =3D f.parentNode.childNodes;
+for (var i =3D 0; i < s.length; i++) {
+        if (s[i].nodeName =3D=3D 'SCRIPT' &&
+            s[i].attributes['src'] &&
+            s[i].attributes['src'].nodeValue =3D=3D unescape('http:\x2F\x2F=
+www.google.com\x2Fcoop\x2Fcse\x2Fbrand?form=3Dsearchbox_0074052035071246911=
+54%3Axfntrbzi-tu')) {
+          su();
+          break;
+        }
+      }
+    } else {
+      su();
+    }
+
+   =20
+    if (n.platform =3D=3D 'Win32') {
+      q.style.cssText =3D 'border: 1px solid #7e9db9; padding: 2px;';
+    }
+
+   =20
+    if (window.history.navigationMode) {
+      window.history.navigationMode =3D 'compatible';
+    }
+
+    var b =3D function() {
+      if (q.value =3D=3D '') {
+        q.style.background =3D '#FFFFFF url(http:\x2F\x2Fwww.google.com\x2F=
+cse\x2Fintl\x2Fen\x2Fimages\x2Fgoogle_custom_search_watermark.gif) left no-=
+repeat';
+      }
+    };
+
+    var f =3D function() {
+      q.style.background =3D '#ffffff';
+    };
+
+    q.onfocus =3D f;
+    q.onblur =3D b;
+
+   =20
+    if (!/[&?]q=3D[^&]/.test(l.search)) {
+      b();
+    }
+  }
+})();
+
+------=_NextPart_000_0000_D3001684.5999C737
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Location: http://www.physionet.org/physiotools/dfa/dfa.png
+
+iVBORw0KGgoAAAANSUhEUgAAAXYAAAA8AQMAAABIJAOYAAAABGdBTUEAALGPC/xhBQAAAAZQTFRF
+AAAA////pdmf3QAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfRCwsF
+ESmix6qtAAAB7UlEQVR4nN3WPW/TQBgHcEsdsiD1G+CPwAhVRfxBOnRkA3XqQNNHfIKuDJB8BSaQ
+eMmxMWbsZhcxIBZfy0tsYt/z57mza0F9KT6pWXpDHuXyy9/P6e6iRFgzOPKNO9Fa752tb7fng8D8
+3c16fhPoTzfoTaC/AIwOyy8DfW/cbi93OAnyCcf/98RdPzGmMTKQm89wtOPxosmVc8IJUkAlyn0g
+9XXfR+NLL2OBXJxqvfL5xUP55NJ/ck9TWdOnyuZ9P5v85b84T60nn3/51K6s9RdSGKSbdZH+4PPf
+k87/Bpscj7Q92Sz1Xd8/q36p7OOo8SV4lWNP/Er8nn7b97vVN9Xl18TLlJX4ZcZSX/l81fooItlg
+kzLpsy0jnrTq+6Tz9oWst/nG5fv9k67/WtY75VPrX9ja90xVsS/57LwcOTM3C+vfP5aqzq/6Mq4K
+2w8f23cVuB47X49zr7eZdn+N8z+kLUVu/+Zaqqf/1uMYn8/wVc4bNX6yWOPb8zxHWUEjLUjZ7xcT
+LfVa/7OQ4GkJ50v7VK9v75f4Q8z47j/3K1l/f1MsDxFw38XfD/l9SKHv9WdvzufQJ5v12SzELzHK
+6ubqD/Ruq+NAH5Rvno8G+5X1+8PzrQ9Zr8un4V6yUT0Y3r/zCtsh3jO76f+HfwCQQX3/5wRyJgAA
+AABJRU5ErkJggg==
+------=_NextPart_000_0000_D3001684.5999C737
+Content-Type: image/gif
+Content-Transfer-Encoding: base64
+Content-Location: http://www.physionet.org/nibib+nih+nigms.gif
+
+R0lGODlhcQFTAOcHAAAAAA8PDxAQEB8fHyAgICAhIhckOBIrUikqMi8vLzAwMDI1STU4TD8/P0BA
+QEFDUEhITEdIUEZIVUlJSkVIXENIY0pKSktLS0xMTE1NTUVLb09PT1BQUDdVhFRUVFVVVVZWVldX
+Vz5biVhYWFtbW1xcXF1dXV5eXl9fX0djkGBgYGFhYWJiYmNjY2RkZGhoaFJtmGpqam1tbW5ubm9v
+b3BwcHFxcXJyclx1n3R0dHd3d3V1iHh4eHl5eXp6ent7e2Z+pn19fX5+foCAgIGBgYODg3CIrYWF
+hYeHh4yMjI6Ojo+Pj5CQkH2TtZGRkZOTk5SUlJGRrY+Pw5SUn5aWlpeXl5iYmJmZmZqamomdvJub
+m5ycnJ2dnZ+fn6CgoKGhoaKioqOjo6SkpJWnxKWlpaampqenp6ioqKmpqaqqqqurq6ysrK2tra6u
+rq+vr6Kyy7CwsLGxsbKysrOzs7S0tLW1tba2tre3t7i4uLm5ubq6uru7u6+907y8vL29vb6+vr+/
+v8DAwMHBwcLCwsPDw8TExMXFxcbGxsfHx8jIyL7K3MnJycrKysvLy8zMzM3Nzc7Ozs/Pz9DQ0NHR
+0dLS0szV5NTU1NfX19nZ2dzc3N/f3+Dg4Nvh7OHh4eLi4uPj4+Tk5OXl5ebm5ufn5+jo6Onp6erq
+6uvr6+zs7O3t7eru9O7u7u/v7/Dw8PHx8fLy8hIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIr
+UhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIr
+UhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIr
+UhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIr
+UhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUhIrUiH5BAEKAP8ALAAAAABxAVMA
+AAj+AP8JHEiwoMGDCBMqXMiwocOHEDtBnEixosWLGDNq3Mixo8ePIDEq0ZAopMmTKFOqXMmypUuF
+TzTILPSyps2bOHPq3HkQisyfgXgKHUq0qFGiVH4q9XO0qdOnUKM6tKK0ah6pWKMa0Lg1q1eLV6qK
+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
+8bwHLqMNBia90sOsB2fA0gMdEAA7
+------=_NextPart_000_0000_D3001684.5999C737--

@@ -1,0 +1,55 @@
+/*[[
+   Name := RST_Hilbert_Oscillator
+   Author := David W Thomas
+   Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+   Notes := Hilbert Oscillator in "Rocket Science for Traders".
+   Separate Window := Yes
+   First Color := LightGreen
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := Yes
+   Second Color := Lavender
+   Second Draw Type := Line
+   Second Symbol := 218
+]]*/
+//Input : PriorPeriod(20);
+Variable : shift(0), prevbars(0), first(True), loopbegin(0),
+         count(0), SmoothPeriod(0), Smooth(0), I3(0), Q3(0), Limit(0), Range(0),
+         Value1(0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars>1 Then first = True;
+
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-6;
+   first = False;
+
+End;
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift=loopbegin Downto 0 Begin
+	SmoothPeriod = iCustom("RST_Homodyne_Discriminator", MODE_SECOND, shift);
+	Q3 = iCustom("RST~Q3", MODE_FIRST, shift);
+	I3 = 0;
+	Limit = Floor(SmoothPeriod/2);
+	For count=0 To Limit Begin
+		I3 += iCustom("RST~Q3", MODE_FIRST, shift+count);
+	End;
+	I3 = 1.57*I3 / Limit;
+	Value1 = 0;
+	Limit = Floor(SmoothPeriod/4);
+	For count=0 To Limit Begin
+		Value1 += iCustom("RST~Q3", MODE_FIRST, shift+count);
+	End;
+	Value1 = 1.25*Value1 / Limit;
+
+   SetIndexValue(shift, I3);
+	SetIndexValue2(shift, Value1);
+   loopbegin--;
+End;

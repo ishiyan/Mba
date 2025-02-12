@@ -1,0 +1,47 @@
+/*[[
+Name :=
+Author := 
+Link := 
+Separate Window := Yes
+First Color := Red
+First Draw Type := Line
+First Symbol := 217
+Use Second Data := Yes
+Second Color := Blue
+Second Draw Type := Line
+Second Symbol := 218
+
+]]*/
+
+Variables : shift(0),AccountedBars(0),FirstTime(True),i(0),swap(0),MinL(0),MaxH(0);
+Inputs: PeriodHerst(24),PeriodA(100),CountBars(900);
+Array: ArrayOne[250](0);
+Variables : Average(0),Deviation(0);
+SetLoopCount(0);
+If FirstTime Then Begin
+	AccountedBars=CountBars;
+	FirstTime=False;
+End;
+For  shift = AccountedBars DownTo 0 Begin
+
+MaxH=Highest(MODE_HIGH,shift+PeriodHerst,PeriodHerst-1);
+MinL=Lowest(MODE_LOW,shift+PeriodHerst,PeriodHerst-1);
+Average=iMA(PeriodA,MODE_SMA,shift);
+swap=0;
+for i=0 to PeriodA-1 
+ {
+  swap=swap+pow(open[shift+i]-Average,2);
+  swap=swap+pow(high[shift+i]-Average,2);
+  swap=swap+pow(low[shift+i]-Average,2);
+  swap=swap+pow(close[shift+i]-Average,2);
+ };
+Deviation=sqrt(swap/((PeriodA-1)*PeriodA));  
+//for i=100 downto 2 {ArrayOne[i]=ArrayOne[i-1];};
+ArrayOne[1]=(High[MaxH]-Low[MinL])/Deviation;
+SetIndexValue(shift,ArrayOne[1]);
+swap=0;
+If shift< CountBars-PeriodA then {for i=1 to PeriodA {swap=swap+GetIndexValue(shift+i);};swap=swap/PeriodA;}
+else swap=0;
+SetIndexValue2(shift,swap);
+If shift>0 Then AccountedBars=AccountedBars-1;
+End;

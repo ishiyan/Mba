@@ -1,0 +1,51 @@
+/*[[
+	Name := RST~ITrend
+	Author := David Thomas
+	Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+	Notes := ITrend for Instantaneous Trendline in "Rocket Science for Traders".
+	Separate Window := No
+	First Color := Blue
+	First Draw Type := Line
+	First Symbol := 217
+	Use Second Data := No
+	Second Color := Red
+	Second Draw Type := Line
+	Second Symbol := 218
+]]*/
+Variable : shift(0), prevbars(0), first(True), loopbegin(0),
+         count(0), SmoothPeriod(0), DCPeriod(0),
+         ITrend(0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars>1 Then first = True;
+
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-6;
+   first = False;
+
+End;
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift=loopbegin Downto 0 Begin
+	SmoothPeriod = iCustom("RST_Homodyne_Discriminator", MODE_SECOND, shift);
+
+	// Compute Trendline as a simple average over the measured dominant
+	// cycle period.
+	DCPeriod = Floor(SmoothPeriod + 0.5);
+	ITrend = 0;
+	For count = 0 To DCPeriod - 1 Begin
+		ITrend += (H[shift+count] + L[shift+count])/2;
+	End;
+	If DCPeriod > 0 Then
+		ITrend /= DCPeriod;
+
+	SetIndexValue(shift, ITrend);
+   loopbegin--;
+End;
+

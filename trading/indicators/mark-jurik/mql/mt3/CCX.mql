@@ -1,0 +1,36 @@
+/*[[
+	Name := JRSX
+	Author := Copyright © 2004, MetaQuotes Software Corp.
+	Link := http://www.metaquotes.net/
+	Separate Window := Yes
+	First Color := Blue
+	First Draw Type := Line
+	First Symbol := 217
+	Use Second Data := No
+	Second Color := Red
+	Second Draw Type := Line
+	Second Symbol := 218
+]]*/
+
+  Inputs: Len(14), barcount(500); 
+
+  Var : shift(0);
+  Var : k(0), abars(0), md(0), value(0);
+  
+  
+
+  SetLoopCount(0);
+
+  
+
+For shift = BarCount-1 Downto 0
+  begin
+    if (shift < 3*Len) then abars = shift else abars = 3*Len;
+    md = 0;
+    for k = 0 to abars-1 {
+      md = md + abs(iCustom("JMA",2,0,MODE_FIRST,shift+k)-iCustom("JMA",Len,0,MODE_FIRST,shift+k));};
+    md = md * 1.5 / abars;
+    if (md > 0.00001) then Value = (iCustom("JMA",2,0,MODE_FIRST,shift)-iCustom("JMA",Len,0,MODE_FIRST,shift))/md*100 else Value = 0;
+    SetIndexValue(shift,Value);
+end;
+

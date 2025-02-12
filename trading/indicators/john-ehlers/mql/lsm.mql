@@ -1,0 +1,102 @@
+/*[[
+   Name := LMS Predictor 
+   Programmer := Nick Bilak, beluck[at]ukr.net
+   Revision := Original translation from Easy Language.
+   Link := 
+   Separate Window := Yes
+   First Color := Blue
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := Yes
+   Second Color := Red
+   Second Draw Type := Line
+   Second Symbol := 218
+]]*/
+/*
+{***************************************************************************************** 
+LMS Predictor 
+John Ehlers MESA Software 
+adapted from Lloyd J. Griffiths, "Rapid Measurement of Digital Instantaneous Frequency", IEEE Transaction ASSP-23, pp207-222, April 1975 
+******************************************************************************************} 
+*/
+//type=0 - antitrend, type=1 - cycle mode
+Inputs: Length(10),type(0); 
+
+Vars: price(0),
+value1(0),
+value2(0),
+value3(0),
+SigPower(0), 
+Mu(0), 
+XBar(0), 
+count(0), 
+SlowK(0),
+i(0),
+shift(0),
+loopbegin(200),
+count1(0); 
+
+Arrays: G[30](0), Val1[30](0),
+SigPredict[30](0); 
+
+//loopbegin=bars-50;
+For shift=loopbegin Downto 0 Begin
+
+if type == 0 then {
+	//{Для использования в качестве противотрендового индикатора 
+	Value1 = 0.25*((H[shift]+L[shift]/2) + 0.5*((H[shift]+L[shift]/2) - (H[shift+4]+L[shift+4]/2))) + 0.75*Value1; 
+} else {
+	//{Для использования в качестве индикатора режима цикла} 
+	SlowK = iSto(Length,Length,3,MODE_SMA,MODE_MAIN,shift);
+	Value1 = 0.2*(2*(SlowK / 100 - 0.5)) + 0.8*Value1; 
+};
+
+for i=1 to 29 {
+	val1[i]=val1[i-1];
+};
+val1[0]=value1;
+
+
+//{Расчет средней силы для нормализации} 
+SigPower = 0; 
+For count = 0 to Length - 1 begin 
+	SigPower = SigPower + Val1[count]*Val1[count]; 
+end; 
+SigPower = SigPower / Length; 
+
+//{ Множитель сходимости } 
+if SigPower > 0 then Mu = 0.25 / (SigPower*Length); 
+
+//If shift > Length then begin 
+	XBar = 0; 
+	//{Расчет оценочного сигнала} 
+	For count = 1 to Length begin 
+		XBar = XBar + Val1[count]*G[count]; 
+	end; 
+	//{Расчет коэффициентов прироста} 
+	For count = 1 to Length begin 
+		G[count] = G[count] + Mu*(Value1 - XBar)*Val1[count]; 
+	end; 
+	//{Расчет формы волны сигнала прогноза} 
+	For count = 0 to Length begin 
+		SigPredict[count] = Val1[Length - count]; 
+	end; 
+	//{Продление сигнала прогноза в будущее} 
+	For count = Length + 1 to Length + 5 begin 
+		SigPredict[count] = 0; 
+		For count1 = 1 to Length begin 
+			SigPredict[count] = SigPredict[count] + SigPredict[count - count1]*G[count1]; 
+		end; 
+	end; 
+	Value2 = SigPredict[Length + 2]; 
+	Value3 = SigPredict[Length + 5]; 
+	
+	//Plot1(Value1, "SlowK"); 
+	//Plot2(Value2, "2Bar"); 
+	//Plot3(Value3, "5Bar"); 
+//end; 
+
+   SetIndexValue(shift,value2);
+   SetIndexValue2(shift,value3);
+
+end;

@@ -1,0 +1,63 @@
+TRADING STRATEGY
+
+Adaptive_EU5.cht
+Adaptive Median AVG
+2009.04.18 11:33:41 PM
+
+
+OPTIMIZATION
+
+Full Optimization
+
+
+LONG ENTRY
+
+Generate a buy long  market order if all of the following are true
++ A>B(MedAvgAdapFilt(Price,Threshold),Lag(MedAvgAdapFilt(Price,Threshold),Periods Back))
+
+
+SHORT ENTRY
+
+Generate a sell short   market order if all of the following are true
++ A<B(MedAvgAdapFilt(Price,Threshold),Lag(MedAvgAdapFilt(Price,Threshold),Periods Back))
+
+
+TRADING STRATEGY PARAMETERS
+
+Trading Rule Optimization
+        Full Optimization - Finds the best rules and the best parameters for each rule.
+
+Size of trades used to evaluate trading strategy
+        Buy a fixed number of units (1 unit)
+
+Other Trading Parameters
+        (none)
+
+Optimization of trading strategy
+        Optimize across 2 weeks of data prior to paper trading
+
+Optimal Evaluation of trading strategy
+        Evaluate optimization across paper trading
+
+Trading of trading strategy
+        Begin 1 day before last date on chart
+        End at last chart date
+
+Entry Commission(s)
+        (none)
+
+Exit Commission(s)
+        (none)
+
+Other costs
+        (none)
+
+Objective used during optmization
+        Maximize Return on Account
+
+
+TRADING STRATEGY RESULTS SUMMARY
+
+Name	Symbol	Data Set	1yr Ret on Account	Ret on Trades	1yr Ret on Trades	Ret on Account	Net Profit	Gross Profit	Gross Loss	Ratio Gross Profit/Loss	%Profitable Trades	#Trades	#Winning Trades	#Losing Trades	Largest Win	Largest Loss	Avg Trade Profit	Avg Win	Avg Loss	Ratio Avg Win/Avg Loss	Max Consecutive Winners	Max Consecutive Losers	Avg Trade Span	Avg Winning Trade Span	Avg Losing Trade Span	Longest Trade Span	Longest Winning Trade Span	Longest Losing Trade Span	Largest Units Traded	Largest Winning Units Traded	Largest Losing Units Traded	Avg Units Traded	Avg Units Traded	Avg Losing Units Traded	Commissions Paid	Max Drawdown	Max Open Trade Drawdown	Required Account Size	Start Date	End Date	Start Price	End Price	Price Change	% Price Change	% Annual Price Change
+EURUSD	EURUSD	Optimization	34.4%	0.8%	34.6%	0.8%	$ 0.01104	$ 0.08097	$ 0.06993	1.16	38.3%	107	41	66	$ 0.01106	$ 0.00335	$ 0.00	$ 0.00	$ 0.00	1.86	4	8	19 bars	34 bars	10 bars	10 bars	86 bars	35 bars	1	1	1	1	1	1	$ 0.00	$ 0.02011	$ 0.00353	$ 1.32792	2009.04.08 3:35:00 AM	2009.04.16 11:00:00 PM	1.32123	1.31842	-0.00281	-0.2%	-8.8%
+EURUSD	EURUSD	Trading	71.6%	0.2%	71.6%	0.2%	$ 0.00258	$ 0.00991	$ 0.00733	1.35	26.7%	15	4	11	$ 0.00686	$ 0.00223	$ 0.00	$ 0.00	$ 0.00	3.72	1	5	20 bars	42 bars	12 bars	12 bars	82 bars	31 bars	1	1	1	1	1	1	$ 0.00	$ 0.00511	$ 0.00276	$ 1.31969	2009.04.16 11:05:00 PM	2009.04.17 11:00:00 PM	1.31866	1.30419	-0.01447	-1.1%	-401.9%

@@ -1,0 +1,96 @@
+/*[[
+   Name := RST_Homodyne_Discriminator
+   Author := David W Thomas modified by Michael Vion
+   Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+   Notes := This is the Homodyne Discriminator to calculate the current cycle period, from "Rocket Science for Traders" by John F. Ehlers.  Its used in many other indicators.
+   Separate Window := Yes
+   First Color := Orange
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := Yes
+   Second Color := Blue
+   Second Draw Type := Line
+   Second Symbol := 218
+]]*/
+//Input : PriorPeriod(20);
+Variable : shift(0), prevbars(0), prevtime(0), first(True), loopbegin(0),
+         i(0), jI(0), jQ(0);
+Arrays : I1p[7](0), Q1p[7](0), Detp[7](0), 
+		I2p[2](0), Q2p[2](0), Re[2](0), Im[2](0), Per[2](20), SmoothPer[2](0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars > 1 Then first = True;
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-7;
+   If loopbegin < 0 Then Exit;      // not enough bars for counting
+   first = False;
+   SmoothPer[0] = Per[0];
+End;
+
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift = loopbegin Downto 0 Begin
+	if Time[shift] > prevtime then Begin // this line is to avoid a recomputing on each tick
+		// initialize the arrays
+		for i = 6 DownTo 1 begin
+			I1p[i] = I1p[i-1];
+			Q1p[i] = Q1p[i-1];
+			Detp[i] = Detp[i-1];
+		end;
+		I2p[1] = I2p[0];
+		Q2p[1] = Q2p[0];
+		Re[1] = Re[0];
+		Im[1] = Im[0];
+		Per[1] = Per[0];
+		SmoothPer[1] = SmoothPer[0];
+	
+	   Detp[0] = (0.0962*iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift)*1000 + 0.5769*iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift+2)*1000
+	      		- 0.5769*iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift+4)*1000 - 0.0962*iMAEx(4, MODE_LWMA, 0, PRICE_MEDIAN, shift+6)*1000)
+	      		* (0.075*Per[1] + 0.54);
+	
+	   // Compute InPhase and Quadrature components
+	   I1p[0] = Detp[3];
+	   Q1p[0] = (0.0962*Detp[0] + 0.5769*Detp[2] - 0.5769*Detp[4] - 0.0962*Detp[6]) * (0.075*Per[1] + 0.54);
+	
+	   // Advance the phase of I1 and Q1 by 90 degrees
+	   jI = (0.0962*I1p[0] + 0.5769*I1p[2] - 0.5769*I1p[4] - 0.0962*I1p[6])*(0.075*Per[1] + 0.54);
+	   jQ = (0.0962*Q1p[0] + 0.5769*Q1p[2] - 0.5769*Q1p[4] - 0.0962*Q1p[6])*(0.075*Per[1] + 0.54);
+	
+	   // Phasor addition for 3 bar averaging
+	   I2p[0] = I1p[0] - jQ;
+	   Q2p[0] = Q1p[0] + jI;
+	
+	   // Smooth the I and Q components before applying the discriminator
+	   I2p[0] = 0.2*I2p[0] + 0.8*I2p[1];
+	   Q2p[0] = 0.2*Q2p[0] + 0.8*Q2p[1];
+	
+	   // Homodyne Discriminator
+	   Re[0] = I2p[0]*I2p[1] + Q2p[0]*Q2p[1];
+	   Im[0] = I2p[0]*Q2p[1] - Q2p[0]*I2p[1];
+	   Re[0] = 0.2*Re[0] + 0.8*Re[1];
+	   Im[0] = 0.2*Im[0] + 0.8*Im[1];
+	   
+	   if (Im[0] != 0 and Re[0] != 0) then
+	      Per[0] = 6.2832 / ArcTan(Im[0]/Re[0]);
+	   if (Per[0] > 1.5*Per[1]) then
+	      Per[0] = 1.5*Per[1];
+	   if (Per[0] < 0.67*Per[1]) then
+	      Per[0] = 0.67*Per[1];
+	   if Per[0] < 6 then Per[0] = 6.0;
+	   if Per[0] > 50 then Per[0] = 50.0;
+	
+	   Per[0] = 0.2*Per[0] + 0.8*Per[1];
+	   SmoothPer[0] = 0.33*Per[0] + 0.67*SmoothPer[1];
+	End;
+   
+	SetIndexValue(shift, Per[0]);
+	SetIndexValue2(shift, SmoothPer[0]);
+	loopbegin--;
+	prevTime = Time[shift];
+End;

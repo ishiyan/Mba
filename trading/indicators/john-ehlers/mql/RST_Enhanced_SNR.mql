@@ -1,0 +1,61 @@
+/*[[
+   Name := RST_Enhanced_SNR
+   Author := David W Thomas
+   Link := http://www.moneytec.com/forums/_showthread/_threadid-9317/_s-
+   Notes := Enhanced Signal-to-Noise Ratio in "Rocket Science for Traders".
+   Separate Window := Yes
+   First Color := Green
+   First Draw Type := Line
+   First Symbol := 217
+   Use Second Data := Yes
+   Second Color := Gray
+   Second Draw Type := Line
+   Second Symbol := 218
+]]*/
+//Input : PriorPeriod(20);
+Variable : shift(0), prevbars(0), prevtime(0), first(True), loopbegin(0),
+         count(0), SmoothPeriod(0), Smooth(0), I3(0), Q3(0), Limit(0), Range(0),
+         Signal(0), Noise(0), Noisep(0), SNR(0), SNRp(0);
+
+SetLoopCount(0);
+
+// check for additional bars loading or total reloading
+If Bars < prevbars or Bars-prevbars>1 Then first = True;
+
+prevbars = Bars;
+
+If first Then Begin
+   // loopbegin prevent counting of counted bars exclude current
+   loopbegin = Bars-6;
+   first = False;
+
+End;
+
+// loop from first bar to the current bar
+loopbegin++; // current bar is to be recounted too
+For shift=loopbegin Downto 0 Begin
+   if Time[shift] > prevtime then Begin
+      Noisep = Noise;
+      SNRp = SNR;
+   end;
+
+	SmoothPeriod = iCustom("RST_Homodyne_Discriminator", MODE_SECOND, shift);
+	Q3 = iCustom("RST~Q3", MODE_FIRST, shift);
+	I3 = 0;
+	Limit = Floor(SmoothPeriod/2);
+	For count=0 To Limit Begin
+		I3 += iCustom("RST~Q3", MODE_FIRST, shift+count);
+	End;
+	I3 = 1.57*I3 / Limit;
+
+	Signal = (I3*I3 + Q3*Q3)/1000;  // remove one of the 1000 factors.
+	Range = H*1000 - L*1000;
+	Noise = 0.1*(Range*Range)*0.25/1000 + 0.9*Noisep;
+	If (Noise != 0 and Signal != 0) then
+		SNR = 0.33*(10.0*Log(Signal/Noise)/Log(10.0)) + 0.67*SNRp;
+
+   SetIndexValue(shift, SNR);
+	SetIndexValue2(shift, 6.0);
+   loopbegin--;
+   prevtime = Time[shift];
+End;

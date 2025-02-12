@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<head>
+<!--
+<link rel="stylesheet" type="text/css" href="../../tools/katex/katex.min.css">
+<script type="text/javascript" src="../../tools/katex/katex.min.js"></script>
+<script type="text/javascript" src="../../tools/katex/contrib/auto-render.min.js"></script>
+-->
+<script type="text/x-mathjax-config"><!-- usage: $\setCounter{-10}$ -->
+  MathJax.Hub.Register.StartupHook("TeX AMSmath Ready", function() {
+    MathJax.InputJax.TeX.Definitions.Add({
+      macros: { setCounter: "setCounter" }
+    }, null, true);
+    MathJax.InputJax.TeX.Parse.Augment({
+      setCounter: function(name) {
+        var num =  parseInt(this.GetArgument(name));
+        MathJax.Extension["TeX/AMSmath"].number = num;
+       }
+    });
+  });
+</script>
+<!-- script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script -->
+<script type="text/javascript" src="../../tools/MathJax/MathJax.js?config=TeX-AMS-MML_SVG-full"></script>
+<script type="text/javascript" src="../../js/ConfigMathJax.js"></script>
+
+<script src="../../tools/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<link rel="stylesheet" href="../../css/textbook_aside_blue.css" media="all"/>
+
+<script src="../../js/d3.v5.min.js"></script>
+<script src="../../js/techan.min.js"></script>
+<script src="../../js/charts.js"></script>
+<script src="../../js/lines.js"></script>
+<script src="../../js/counters.js"></script>
+
+<title>ehlers.html</title>
+</head>
+<body>
+
+<h1>Ehlers</h1>
+<p> 
+</p>
+
+<h2 id="ehlers.sma">SMA</h2><! --------------------------------------------------------------------------------------------------------------------------------- ->
+<p>From <cite href="#Ehlers2001"></cite>, pp xxx-xxx.
+</p>
+<p>An $n$-day SMA is formed by adding the samples over $n$ days and dividing by $n$.
+Another way to view an SMA is as average of the data within an $n$-sample moving window.
+The average is usially plotted at the right-hand side of the window which causes a lag.
+</p>
+<p>The average price is always the price at the center of the window expressed at $\frac{n-1}{2}$ <b>[WHY?]</b>.
+</p>
+<p>If we increase SMA window to incude full-period of sinusoid, the SMA value will be always equal to zero because there are as many points above the mean as there are below it. <b>[this is continuous case. sampling?]</b>
+The same happens when SMA window includes an integer number of full-periods of sinusoid.
+</p>
+<p>
+<figure class="center">
+  <img src="img/eh_01_01.svg" width=20% height=20% />
+  <figcaption>svg</figcaption>
+</figure>
+</p>
+<p>SMA coefficients form rectangle across the width of the filter, resulting a center of gravity being 1/2 across the window.
+</p>
+
+<h3>Another view</h3>
+<p>A simple moving average of length $n$ is just the mean of the last $n$ observations of $x_{1},\, x_{2},\, x_{3},\,\ldots\,,\, x_{k}$, where $x_{k}$ is the most recent value:
+
+$$m_{k}=\frac{1}{n}\sum_{i=k-n+1}^{k}x_{i} .$$
+
+In the beginning, when $k \lt n$, this is a cumulative moving average:
+
+$$m_{k}=\frac{1}{k}\sum_{i=1}^{k}x_{i} .$$
+
+Actually the last equation is the particular case of the first one for $k=n$.
+The recurrence for the first equation is
+
+$$m_{k}=\frac{1}{n}\left[x_{k}+\sum_{i=k-n}^{k-1}x_{i}-x_{k-n}\right]=m_{k-1}+\frac{x_{k}-x_{k-n}}{n} .$$
+
+Similarly for the second equation
+
+$$m_{k}=\frac{1}{k-1}\left[x_{k}+\sum_{i=1}^{k-1}x_{i}\right]\frac{k-1}{k}=m_{k-1}+\frac{x_{k}-m_{k-1}}{k} .$$
+
+Note that both can be rewritten as
+
+<equation id="ehlers.sma.1">$$\begin{equation}m_{k}=m_{k-1}+\frac{\delta_{k}-\delta_{k-n}}{N_{k}}\end{equation} .$$</equation>
+
+where
+
+<equation id="ehlers.sma.2">$$\begin{equation}\begin{cases}
+\delta_{l}=x_{l}-m_{k-1} & l \gt 0\\
+\delta_{l}=0 & l\leq0
+\end{cases}\end{equation}$$</equation>
+
+and
+
+<equation id="ehlers.sma.3">$$\begin{equation}\begin{cases}
+N_{k}=n & ,k\geq n\\
+N_{k}=k & ,k\lt n
+\end{cases}\end{equation}$$</equation>
+</p>
+
+<h2 id="ehlers.ema">EMA</h2><! --------------------------------------------------------------------------------------------------------------------------------- ->
+<p>The exponential smoothing is defined by the following recurrent relation
+
+<equation id="ehlers.ema.1">$$\begin{cases}
+m_{1}=x_{1} & k=1\\
+m_{k}=\alpha x_{k}+(1-\alpha)m_{k-1}=\alpha x_{k}+\lambda m_{k-1} & k\gt 1
+\end{cases}$$</equation>
+
+where $\lambda=1-\alpha$. This recurrence also defines a weighted average
+
+$$m_{k}=\sum_{i=1}^{k}w_{k,i}x_{i}$$
+with the following weights
+$$w_{k,i}=\begin{cases}
+\lambda^{k} & i=1\\
+\alpha\lambda^{k-i} & i \gt 1
+\end{cases}$$
+
+The weights decrease exponentially with the decay factor $\nu=-ln(\lambda)$, which gave the name for this smoothing:
+
+<equation id="ehlers.ema.2">$$\begin{cases}
+\frac{w_{k,i}}{w_{k,i+1}}=\lambda=e^{-\nu} & i=k-1,\,\ldots,\,2\\
+\frac{w_{k,1}}{w_{k,2}}=\frac{\lambda}{\alpha} & i=1
+\end{cases}$$</equation>
+
+The weight $w_{k,1}$ in the previous equation does not follow the same exponential rule.
+For $\lambda>\frac{1}{2}$ it is even not the smallest one.
+The pure exponential average can be defined as
+
+$$m_{k}=\frac{S_{k}}{N_{k}}$$
+
+where
+
+$$\begin{eqnarray*}
+S_{k} & = & \sum_{i=1}^{k}\lambda^{k-i}x_{i}\\
+N_{k} & = & \sum_{i=1}^{k}\lambda^{k-i}
+\end{eqnarray*}$$
+
+The above equations can be written as recurrent relations:
+
+<equation id="ehlers.ema.3">$$\begin{eqnarray*}
+S_{k} & = & x_{k}+\lambda S_{k-1}\\
+N_{k} & = & 1+\lambda N_{k-1}
+\end{eqnarray*}$$</equation>
+
+Using these equations, it is easy to derive a recurrence for the mean value
+
+$$\begin{eqnarray*}
+m_{k} & = & \frac{x_{k}+\lambda S_{k-1}}{N_{k}}\\
+ & = & \frac{x_{k}}{N_{k}}+\frac{\lambda N_{k-1}}{N_{k}}m_{k-1}\\
+ & = & m_{k-1}+\frac{x_{k}}{N_{k}}+\left(\frac{\lambda N_{k-1}}{N_{k}}-1\right)m_{k-1}\\
+ & = & m_{k-1}+\frac{x_{k}}{N_{k}}-\frac{m_{k-1}}{N_{k}}
+\end{eqnarray*}$$
+
+Finally,
+
+<equation id="ehlers.ema.4">$$\begin{equation}m_{k}=m_{k-1}+\frac{\delta_{k}}{N_{k}}\end{equation}$$</equation>
+
+where
+
+<equation id="ehlers.ema.5">$$\begin{equation}\delta_{k}=x_{k}-m_{k-1}\end{equation}$$</equation>
+</p>
+
+<p>The equations <a href="#ehlers.ema.4">???</a> and <a href="#ehlers.ema.5">???</a> are remarkably similar to <a href="#ehlers.sma.1">???</a> - <a href="#ehlers.sma.3">???</a>.
+The smoothing length is well defined in the simple average.
+It is the norm $N_{k}$ <a href="#ehlers.sma.3">???</a>.
+The norm <a href="#ehlers.ema.3">???</a> is the
+generalization of <a href="#ehlers.sma.3">???</a> and defines the effective smoothing length for the exponential average:
+
+<equation id="ehlers.ema.6">$$\begin{equation}N_{k}=\frac{1-\lambda^{k}}{1-\lambda}=\frac{1-\lambda^{k}}{\alpha}\end{equation}$$</equation>
+
+This norm accounts for 100 % of all weights. At sufficiently large $k$
+
+$$\frac{1}{N_{k}}\rightarrow\frac{1}{N_{\infty}}=\alpha\label{eq:norminf}$$
+
+and $\frac{\lambda^{k-i}}{N_{k}}\approx w_{k,i}$ <a href="#ehlers.ema.2">???</a>.
+Therefore both definitions of exponential smoothing coincide for large $k$.
+Actually the difference between the two definitions tends to zero as $\lambda^{k}$.
+</p>
+
+<p>The definition <a href="#ehlers.ema.6">???</a> seems to be natural, however historically the smoothing period $P$ for the exponential smoothing <a href="#ehlers.ema.1">???</a> is defined as
+
+$$\alpha=\frac{2}{P+1}$$
+
+These two definitions related as
+
+$$N_{k}=\frac{P+1}{2}\left[1-\left(\frac{P-1}{P+1}\right)^{k}\right]\approx\frac{P+1}{2}$$
+
+In RiskMetrics [<a href="http://www.wu.ac.at/executiveeducation/institutes/banking/sbwl/lvs_ws/vk4/rrmfinal.pdf">3</a>] the effective averaging length $L$ is defined as
+
+$$\frac{N_{L}}{N_{\infty}}=0.999=1-\epsilon$$
+
+Therefore
+
+\begin{eqnarray*}
+1-\lambda^{L} & = & 1-\epsilon\\
+\lambda^{L} & = & \epsilon
+\end{eqnarray*}
+
+or
+
+$$\lambda=\epsilon^{\frac{1}{L}}$$
+
+This length is related to the natural length as
+
+$$L=\frac{ln(\epsilon)}{ln(\lambda)} = \frac{ln(\epsilon)}{ln(1-\frac{1}{N_{\infty}})}$$
+
+For $N_{\infty} >> 1$
+
+$$L \approx 6.9\; N_{\infty}$$
+</p>
+
+<p>In particular, for $\lambda=0.94$ [<a href="http://www.wu.ac.at/executiveeducation/institutes/banking/sbwl/lvs_ws/vk4/rrmfinal.pdf">3</a>], 
+ the above definitions give the following values: $L=112$, $P=33$, $N_{\infty}=17$.
+</p>
+
+<p> A couple of specific cases are also worth mentioning. 
+For $N_{\infty}=P=1$ $\lambda=0$ - no averaging; and for $L=1$ &nbsp; $\lambda=0.001$.
+</p>
+
+<p>
+The values of all definitions for selected $\lambda$ are collected in the table below.
+</p>
+
+<p>
+<table class="center">
+  <thead>
+  <tr>
+    <th> $\lambda$ </th>
+    <th> L </th>
+    <th> P </th>
+    <th> $N_{\infty}$ </th>
+    <th>&nbsp;Comment</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td> 0 </td>
+    <td> 0 </td>
+    <td> 1 </td>
+    <td> 1 </td>
+    <td>No averaging</td>
+  </tr>
+  <tr>
+    <td> 0.001 </td>
+    <td> 1 </td>
+    <td> 1.002 </td>
+    <td> 1.001 </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td> 0.5 </td>
+    <td> 10 </td>
+    <td> 3 </td>
+    <td> 2 </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td> 0.75 </td>
+    <td> 24 </td>
+    <td> 7 </td>
+    <td> 4 </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td> 0.875 </td>
+    <td> 52 </td>
+    <td> 15 </td>
+    <td> 8 </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td> 0.94 </td>
+    <td> 112 </td>
+    <td> 33 </td>
+    <td> 17 </td>
+    <td>&nbsp;RiskMetrix</td>
+  </tr>
+  </tbody>
+  <caption> </caption>
+</table>
+</p>
+
+<h2 id="ehlers.wma">WMA</h2><! --------------------------------------------------------------------------------------------------------------------------------- ->
+<p>From <cite href="#Ehlers2001"></cite>, pp xxx-xxx.
+</p>
+<p>Close to SMA (<a href="#ehlers.sma">xxx</a>), but multiplier coefficients are not constant across the window width but are linearly weighted.
+
+$$WMA_N = \frac{\sum\limits_{i=0}^{N-1}{(N-i)P_i}}{\sum\limits_{i=0}^{N-1}{(N-i)}}$$
+
+The sum of the data and coefficient products are divided by the sum of coefficients to normalize the averaging process.
+</p>
+
+<p>The major advantage of WMA is the reduced lag which results from the most recent data being the most heavily weighted.
+WMA coefficients form triangle across the width of the filter, resulting a center of gravity being 1/3 across the window.
+</p>
+
+<h2 id="ehlers.zema">ZEMA</h2><! --------------------------------------------------------------------------------------------------------------------------------- ->
+<p>Was introduced by John Ehlers in <cite href="#Ehlers2001"></cite>, pp 167-175.
+</p>
+
+<p>Zema is a suboptimal "almost" zero-lag filter based on a simplification of a Kalman filter with a constant gain.
+The idea of Zema comes from the tracking filters that use a liner model to estimate the position of a military target.
+</p>
+
+<p>Imagine a gunner shooting at an enemy target.
+He estimates the angle of his gun and shoots.
+The forward shoot soldiers radio back how much deviation there was from the target.
+The gunner computes the incremental change required for his new gun angle from the deviation.
+</p>
+
+<p>This model constitutes using the previous estimate plus a constant times the difference between the last real position and the last estimate
+
+<equation id="ehlers.zema.1">$$x_{estim} = x_{estim}[1] + \alpha (x_{real} - x_{estim}) .$$</equation>
+
+We can improve the estimate of position by adding an estimate of the velocity to the last known position:
+
+$$x_{estim} = x_{estim} + \alpha (x_{real} + g * v - x_{estim}[1])$$
+
+where $v$ is an estimate of velocity, $g$ is a gain factor.
+
+The velocity estimate can be an EMA of the rate of change of position,
+
+$$v_{estim} = v_{estim}[1] + \beta (v - v_{estim}[1]) .$$
+</p>
+
+<p>The equation <a href="#ehlers.zema.1">???</a> looks like an EMA:
+
+$$ema(x) = \alpha x + (1 - \alpha) ema(x)[1] = ema(x)[1] + \alpha (x - ema(x)[1]) .$$
+
+Considering a special case $\beta = 1$, Ehlers uses a momentum to approximate the velocity
+</p>
+
+<h2 id="ehlers.hilbert_transformer">Hilbert transformer</h2><! --------------------------------------------------------------------------------------------------------------------------------- ->
+<p>From <cite href="#Ehlers2001"></cite>, pp xxx-xxx.
+</p>
+<p>When data are sampled at a sample frequency $f_s$, that sampling frequency acts like a radio carrier signal.
+That is, the real data being sampled and heterodyned into upper and lower sidebands of the sampling frequency.
+Mathematically, heterodyning is multiplying two frequencies.
+</p>
+
+<p>So, if we have a baseband data frequency of $f_b$, the phase of two signals is
+
+$$\frac{1}{2}cos(2\pi f_s t)cos(2\pi f_b t) = cos(2\pi(f_s - f_b)t) + cos(2\pi(f_s + f_b)t)$$
+
+The lower sideband can be considered as a negative frequency relative to $f_s$, and the upper sideband can be considered as a positive frequency.
+Furthermore, every harmonic of $f_s$ exists having its own lower and upper sidebands containing the base signal.
+</p>
+
+<p>The sample data spectrum can be pictured as
+</p>
+[svg]
+
+<p>The baseband range of frequencies is limited to $f_s/2$ following the Nyquist sampling criteria.
+As we are talking over complex functions, the sampled spectrum can extend below zero.
+</p>
+<p>An interesting observation is that that either the upper or lower sideband of any harmonic of $f_s$ can be processed with exactly the same result because the same information resides in all sidebands.
+Therefore, the frequency selection for processing is a matter of convenience and is usually the baseband because demodulation of the zero frequency harmonic is not required.
+</p>
+<p>Analytic signals can be defined as a special case of a complex function without imaginary values that have only positive  or negative frequencies, but not both.
+Analytic signal can be split into the sum of two complex signals that are odd and even functions around zero.
+These two functions may be $\sin$ and $\cos$.
+Recall, $cos(wt) = cos(-wt)$ and $sin(wt) = -sin(-wt)$.
+Also, by Euler's equations $cos(wt) = \frac{1}{2}(e^{jwt} + e^{-jwt})$ and $sin(wt) = \frac{1}{2j}(e^{jwt} - e^{-jwt})$.
+</p>
+<p>In DSP parlance, an analytical signal is a sum of inPhase and Quadrature components.
+InPhase and Quadrature components can be created from the analytical signal with Hilbert transform.
+It can be shown, [HOW?] that the Hilbert transform
+
+$$H(e^{jw}) = \sum\limits_{n=-\infty}^{\infty}{C_{n} e^{jwn}}, C_{n} = \frac{sin^{2}(\frac{\pi}{2} n)}{\frac{\pi}{2} n}, n \neq 0, C_{0}=0 .$$
+
+</p>
+
+<p>From this formula, Ehlers concludes that $C_{n}=\frac{1}{n}$ for odd values of $n$ and $C_{n} \gt 0$ for $n \gt 0$, $C_{n} \lt 0$ for $n \lt 0$.
+</p>
+
+<p>The $\frac{\pi}{2}$ factor in $C_{n}$ can be ignored because each of $C_{n}$ coefficient is divided by the sum of $C_{n}$ to produce a normalized amplitude response.
+</p>
+
+<p>Truncating the filter at $n=7$,
+
+$$Q = \frac{\frac{1}{7}P + \frac{1}{5}P[2] + \frac{1}{3}P[4] + P[6] - P[8] - \frac{1}{3}P[10] - \frac{1}{5}P[12] - \frac{1}{7}P[14]}{1 + \frac{1}{3} + \frac{1}{5} + \frac{1}{7}}, I = P[7]$$
+
+where inPhase is a value at the center of the filter.
+The lag of the filter is $14/2 = 7$ bars.
+</p>
+
+<p>Truncating at $n = 3$, we get
+
+$$Q = \frac{\frac{1}{3}P + P[2] - P[4] - \frac{1}{3}P[6]}{1 + \frac{1}{3}} = 0.25P + 0.75P[2] - 0.75P[4] - 0.25P[6], I = P[3] .$$
+
+The lag is $6/2 = 3$ bars.
+</p>
+
+<p>But this truncation produces not so good amplitude response. Then Ehlers says that the response can be improved adjusting filter coefficients <q>by trial and error</q>, which results in
+
+$$Q = 0.0962P + 0.5769P[2] - 0.5769P[4] - 0.0962P[6], I = P[3] .$$
+
+[coefficients are not ~ 1/n, is this a Hilbert transform then?]
+</p>
+
+<p>&nbsp;
+</p>
+
+<h1 class="counter-skip">References</h1>
+<citedSource id='Ehlers2001'>Ehlers, John F. (2001). <em>Rocket Science for Traders: Digital Signal Processing Applications</em>. Wiley, 2001. ISBN:9780471405672 <a href="https://books.google.nl/books?id=K9F1rgEACAAJ">online</a> <a href="offline/ehlers2001.pdf">offline</a></citedSource>
+<citedSource id='Ehlers2004'>Ehlers, John F. (2004). <em>Cybernetic Analysis for Stocks and Futures: Cutting-Edge DSP Technology to Improve Your Trading</em>. Wiley, 2004. ISBN:9780471463078 <a href="https://books.google.nl/books?id=Wj6sNAEACAAJ">online</a> <a href="offline/ehlers2004.pdf">offline</a></citedSource>
+<citedSource id='Ehlers2013'>Ehlers, John F. (2013). <em>Cycle Analytics for Traders + Downloadable Software: Advanced Technical Trading Concepts</em>. John Wiley &amp; Sons, 2013. ISBN:9781118728604 <a href="https://books.google.nl/books?id=2z9VAgAAQBAJ">online</a> <a href="offline/ehlers2013.pdf">offline</a></citedSource>
+<citedSource id='Ehlers1992'>Ehlers, John F. (1992). <em>MESA and Trading Market Cycles</em>. Wiley, 1992. ISBN:9780471549437 <a href="https://books.google.nl/books?id=0UUUAQAAMAAJ">online</a> <a href="offline/ehlers1992.pdf">offline</a></citedSource>
+<citedSource id='Ehlers2010'>Ehlers, John F. and Way, Rick (2010, November). <em>Zero Lag (Well, Almost)</em>. Technical Analysis of Stocks &amp; Commodities, vol. 28 (11), pp. 30-35. ISSN:0738-3355 <a href="http://store.traders.com/stcov283zela.html">online</a> <a href="offline/tasc_v28_2010_11_pp30-35_John_Ehlers_Ric_Way-Zero_Lag_(Well_Almost).pdf">offline</a></citedSource>
+
+<script type="text/javascript" src="../js/non_phantomjs_screen.js"></script>
+<!--
+<script>
+renderMathInElement( // katex
+          document.body,
+          {
+              delimiters: [
+                  {left: "$$", right: "$$", display: true},
+                  {left: "\\[", right: "\\]", display: true},
+                  {left: "$", right: "$", display: false},
+                  {left: "\\(", right: "\\)", display: false}
+              ]
+          }
+      );
+</script>
+-->
+</body>
+</html>

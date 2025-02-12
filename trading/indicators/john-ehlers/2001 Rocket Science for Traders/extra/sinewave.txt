@@ -1,0 +1,73 @@
+Inputs: prezzo((h+l+o+c)/4);  // original is (h+l)/2
+
+variables:smooth(0),detrender(0),I1(0),Q1(0),
+period(0),ji(0),jq(0),im(0),i2(0),q2(0),
+re(0),smoothper(0),smoothpri(0),
+dcper(0),realpart(0),impart(0),count(0),
+itrend(0),trendline(0),trend(0),daysintrend(0),dcphase(0);
+
+
+if currentbar > 5 then begin
+
+smooth=(4*prezzo +3*prezzo[1]+2*prezzo[2]+prezzo[3])/10;
+
+detrender=(0.962*smooth+0.5769*smooth[2]-0.5769*smooth[4]-0.962*smooth[6])*(0.75*period[1]+0.54);
+
+Q1=(0.962*detrender+0.5769*detrender[2]-0.5769*detrender[4]-0.962*detrender[6])*(0.75*period[1]+0.54);
+
+I1=detrender[3];
+
+
+ji=(0.962*I1+0.5769*I1[2]-0.5769*I1[4]-0.962*I1[6])*(0.75*period[1]+0.54);
+
+jq=(0.962*Q1+0.5769*Q1[2]-0.5769*Q1[4]-0.962*Q1[6])*(0.75*period[1]+0.54);
+
+i2=I1-jq;
+q2=q1+ji;
+
+i2=0.2*i2+0.8*i2[1];
+q2=0.2*q2+0.8*q2[1];
+
+//HOMODYNE DISCRIMINATOR
+
+re=i2*i2[1]+q2*q2[1];
+im=i2*q2[1]-q2*i2[1];
+re=0.2*re+0.8*re[1];
+im=0.2*im+0.8*im[1];
+
+if (im <> 0 and re <>0) then period= 360/arctangent(im/re);
+if period >1.5*period[1] then period =1.5*period[1];
+if period<0.67*period[1] then period=0.67*period[1];
+if period<6 then period=6;
+if period >50 then period=50;
+period=0.2*period*0.8*period[1];
+smoothper=0.33*period+0.67*smoothper[1];
+
+smoothpri=(4*prezzo+3*prezzo[1]+2*prezzo[2]+prezzo[3])/10;
+dcper=IntPortion(smoothper+0.5);
+
+realpart=0;impart=0;
+
+for count=0 to dcper-1 begin
+realpart=realpart+cosine(360*count/dcper)*(smoothpri[count]);
+impart=impart+Sine(360*count/dcper)*(smoothpri[count]);
+end;
+
+if absvalue(realpart)>0.001 then 
+dcphase =arctangent(impart/realpart);
+
+if absvalue(realpart)<=0.001 then  
+dcphase=90*Sign(impart);
+dcphase=dcphase+90;
+
+if smoothper<>0 then
+dcphase=dcphase+360/smoothper;
+
+if impart<0 then
+dcphase=dcphase+180;
+if dcphase>315 then
+dcphase=dcphase-360;
+end;
+
+plot1(Sine(dcphase),"sine");
+plot2(Sine(dcphase+45),"leadsine");

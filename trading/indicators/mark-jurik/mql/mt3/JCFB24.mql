@@ -1,0 +1,105 @@
+// Created by Starlight (extesy@yandex.ru). Don't remove this line even if you do conversion to EL,MQL etc!
+// Translated By Nikki21
+/*[[
+	Name := JCFB24
+	Author := Nikki21
+	Separate Window := Yes
+	First Color := Blue
+	First Draw Type := Line
+	First Symbol := 217
+	Use Second Data := No
+	Second Color := Red
+	Second Draw Type := Line
+	Second Symbol := 218
+]]*/
+/*[[
+	Name := JCFB24
+	Author := Николай Максимов
+]]*/
+
+inputs: Smooth(15),BarsCount(300),Mode(0);
+
+var: Bar(0);
+var: Value(0);
+
+var: er1(0), er2(0), er3(0), er4(0), er5(0), er6(0), er7(0), er8(0), er20(0), er21(0), er29(0);
+var: er15(0), er16(0), er17(0), er18(0), er19(0);
+arrays: er22[8](0), er23[8](0);
+
+var: BarCount(0);
+
+BarCount=Bars;
+if BarsCount<BarCount then BarCount=BarsCount;
+
+er15=1;
+er16=1;
+er19=20;
+er29=Smooth;
+er1=iCustom("JCFBaux",2,BarsCount,Mode,MODE_FIRST,0);
+er2=iCustom("JCFBaux",3,BarsCount,Mode,MODE_FIRST,0);
+er3=iCustom("JCFBaux",4,BarsCount,Mode,MODE_FIRST,0);
+er4=iCustom("JCFBaux",6,BarsCount,Mode,MODE_FIRST,0);
+er5=iCustom("JCFBaux",8,BarsCount,Mode,MODE_FIRST,0);
+er6=iCustom("JCFBaux",12,BarsCount,Mode,MODE_FIRST,0);
+er7=iCustom("JCFBaux",16,BarsCount,Mode,MODE_FIRST,0);
+er8=iCustom("JCFBaux",24,BarsCount,Mode,MODE_FIRST,0);
+
+SetLoopCount(0);
+for Bar=1 to BarCount {
+    er19=0;
+    if Bar <= er29 then {
+      for er21 = 1 to 8 {
+        er23[er21] = 0;
+      }
+      for er20 = 0 to Bar-1 {
+    	er23[1] = er23[1] + iCustom("JCFBaux",2,BarsCount,Mode,MODE_FIRST,Bar-er20);
+        er23[2] = er23[2] + iCustom("JCFBaux",3,BarsCount,Mode,MODE_FIRST,Bar-er20);
+    	er23[3] = er23[3] + iCustom("JCFBaux",4,BarsCount,Mode,MODE_FIRST,Bar-er20);
+        er23[4] = er23[4] + iCustom("JCFBaux",6,BarsCount,Mode,MODE_FIRST,Bar-er20);
+    	er23[5] = er23[5] + iCustom("JCFBaux",8,BarsCount,Mode,MODE_FIRST,Bar-er20);
+        er23[6] = er23[6] + iCustom("JCFBaux",12,BarsCount,Mode,MODE_FIRST,Bar-er20);
+		er23[7] = er23[7] + iCustom("JCFBaux",16,BarsCount,Mode,MODE_FIRST,Bar-er20);
+        er23[8] = er23[8] + iCustom("JCFBaux",24,BarsCount,Mode,MODE_FIRST,Bar-er20);
+      }
+      for er21 = 1 to 8 {
+        er23[er21] = er23[er21] / Bar;
+      }
+    } else {
+      er23[1] = er23[1] + (iCustom("JCFBaux",2,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",2,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[2] = er23[2] + (iCustom("JCFBaux",3,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",3,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[3] = er23[3] + (iCustom("JCFBaux",4,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",4,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[4] = er23[4] + (iCustom("JCFBaux",6,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",6,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[5] = er23[5] + (iCustom("JCFBaux",8,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",8,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[6] = er23[6] + (iCustom("JCFBaux",12,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",12,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[7] = er23[7] + (iCustom("JCFBaux",16,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",16,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+      er23[8] = er23[8] + (iCustom("JCFBaux",24,BarsCount,Mode,MODE_FIRST,Bar) - iCustom("JCFBaux",24,BarsCount,Mode,MODE_FIRST,Bar-er29)) / er29;
+    }
+    if Bar > 5 then {
+      er15 = 1;
+      er22[8] = er15 * er23[8];
+      er15 = er15 * (1 - er22[8]);
+      er22[6] = er15 * er23[6];
+      er15 = er15 * (1 - er22[6]);
+      er22[4] = er15 * er23[4];
+      er15 = er15 * (1 - er22[4]);
+      er22[2] = er15 * er23[2];
+      er16 = 1;
+      er22[7] = er16 * er23[7];
+      er16 = er16 * (1 - er22[7]);
+      er22[5] = er16 * er23[5];
+      er16 = er16 * (1 - er22[5]);
+      er22[3] = er16 * er23[3];
+      er16 = er16 * (1 - er22[3]);
+      er22[1] = er16 * er23[1];
+      er17 = er22[1]*er22[1]*2 + er22[3]*er22[3]*4 +
+             er22[5]*er22[5]*8 + er22[7]*er22[7]*16 +
+             er22[2]*er22[2]*3 + er22[4]*er22[4]*6 +
+             er22[6]*er22[6]*12 + er22[8]*er22[8]*24;
+      er18 = er22[1]*er22[1] + er22[3]*er22[3] +
+             er22[5]*er22[5] + er22[7]*er22[7] +
+             er22[2]*er22[2] + er22[4]*er22[4] +
+             er22[6]*er22[6] + er22[8]*er22[8];
+      if (er18 = 0) then er19 = 0 else er19 = er17 / er18;
+    }
+    SetIndexValue(Bar, er19);
+}
