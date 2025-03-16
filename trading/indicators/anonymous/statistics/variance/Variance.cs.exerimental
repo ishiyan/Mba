@@ -1,0 +1,278 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.Serialization;
+using System.Text;
+
+using Mbst.Core;
+
+namespace Mbst.Indicators
+{
+    /// <summary>
+    /// Computes the variance.
+    /// </summary>
+    [DataContract]
+    public sealed class Variance : Indicator, ILineIndicator
+    {
+        #region Members and accessors
+        #region Length
+        [DataMember]
+        private readonly int length;
+        /// <summary>
+        /// The length (the number of time periods).
+        /// </summary>
+        public int Length { get { return length; } }
+        #endregion
+
+        #region Value
+        [DataMember]
+        private double value = double.NaN;
+        /// <summary>
+        /// The current value of the varance, or <c>NaN</c> if not primed.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates, where e <c>ℓ</c> is the length.
+        /// </summary>
+        public double Value { get { lock (updateLock) { return value; } } }
+        #endregion
+
+        [DataMember]
+        private readonly int lastIndex;
+        [DataMember]
+        private int windowCount;
+        [DataMember]
+        private double[] window;
+        [DataMember]
+        private double mean;
+        [DataMember]
+        private double m2;
+
+        private const string var = "VAR";
+        private const string argumentLength = "length";
+        #endregion
+
+        #region Construction
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Variance"/> class.
+        /// </summary>
+        /// <param name="length">The number of time periods.</param>
+        public Variance(int length)
+            : this(length, OhlcvComponent.ClosingPrice)
+        {
+        }
+
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Variance"/> class.
+        /// </summary>
+        /// <param name="length">The number of time periods.</param>
+        /// <param name="ohlcvComponent">The Ohlcv component.</param>
+        public Variance(int length, OhlcvComponent ohlcvComponent)
+            : base(var, "Variance", ohlcvComponent)
+        {
+            if (2 > length)
+                throw new ArgumentOutOfRangeException(argumentLength);
+            this.length = length;
+            lastIndex = length - 1;
+            window = new double[length];
+            base.moniker = string.Concat(var, length.ToString(CultureInfo.InvariantCulture));
+        }
+        #endregion
+
+        #region Reset
+        /// <summary>
+        /// Resets the indicator.
+        /// </summary>
+        public override void Reset()
+        {
+            lock (updateLock)
+            {
+                primed = false;
+                windowCount = 0;
+                mean = 0.0;
+                m2 = 0.0;
+                value = double.NaN;
+            }
+        }
+        #endregion
+
+        #region Update
+        /// <summary>
+        /// Updates the value of the variance.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates.
+        /// </summary>
+        /// <param name="sample">A new sample.</param>
+        /// <returns>The new value of the indicator.</returns>
+        public double Update(double sample)
+        {
+            if (double.IsNaN(sample))
+                return sample;
+            lock (updateLock)
+            {
+                double temp;
+                if (primed)
+                {
+                    temp = window[0] - mean;
+                    temp *= temp;
+                    m2 -= temp;
+                    temp = sample - window[0];
+                    mean += temp / length;
+                    //temp = sample - mean;
+                    //temp *= temp;
+                    //m2 += temp;
+                    m2 += temp * (sample - mean);
+                    value = m2 / length;
+                    //Array.Copy(window, 0, window, 1, lastIndex);
+                    for (int i = 0; i < lastIndex;)
+                        window[i] = window[++i];
+                    window[lastIndex] = sample;
+                }
+                else // Not primed.
+                {
+                    window[windowCount] = sample;
+                    ++windowCount;
+                    temp = sample - mean;
+                    mean += temp / windowCount;
+                    //temp = sample - mean;
+                    //temp *= temp;
+                    m2 += temp * (sample - mean);
+                    if (length == windowCount)
+                    {
+                        primed = true;
+                        value = m2 / length;
+                    }
+                }
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Updates the value of the variance.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates.
+        /// </summary>
+        /// <param name="sample">A new sample.</param>
+        /// <param name="dateTime">A date-time of the new sample.</param>
+        /// <returns>The new value of the indicator.</returns>
+        public Scalar Update(double sample, DateTime dateTime)
+        {
+            return new Scalar(dateTime, Update(sample));
+        }
+
+        /// <summary>
+        /// Updates the value of the variance.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates.
+        /// </summary>
+        /// <param name="scalar">A new scalar.</param>
+        /// <returns>The new value of the indicator.</returns>
+        public Scalar Update(Scalar scalar)
+        {
+            return new Scalar(scalar.Time, Update(scalar.Value));
+        }
+
+        /// <summary>
+        /// Updates the value of the variance.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates.
+        /// </summary>
+        /// <param name="ohlcv">A new ohlcv.</param>
+        /// <returns>The new value of the indicator.</returns>
+        public Scalar Update(Ohlcv ohlcv)
+        {
+            return new Scalar(ohlcv.Time, Update(ohlcv.Component(ohlcvComponent)));
+        }
+        #endregion
+
+        #region Calculate
+        /// <summary>
+        /// Updates the value of the variance.
+        /// The indicator is not primed during the first <c>ℓ-1</c> updates.
+        /// </summary>
+        /// <param name="sampleList">The sample list.</param>
+        /// <param name="length">The number of time periods.</param>
+        /// <returns>A list of indicator values.</returns>
+        static public List<double> Calculate(List<double> sampleList, int length)
+        {
+            if (2 > length)
+                throw new ArgumentOutOfRangeException(argumentLength);
+            int i, count = sampleList.Count;
+            List<double> resultList = new List<double>(count);
+            if (count < length)
+            {
+                for (i = 0; i < count; i++)
+                    resultList.Add(double.NaN);
+            }
+            else
+            {
+                double v, sum = 0.0, sum2 = 0.0, w = length;
+                int l = length - 1;
+                for (i = 0; i < l;)
+                {
+                    v = sampleList[i++];
+                    if (!double.IsNaN(v))
+                    {
+                        sum += v;
+                        v *= v;
+                        sum2 += v;
+                    }
+                    resultList.Add(double.NaN);
+                }
+                v = sampleList[l];
+                if (!double.IsNaN(v))
+                {
+                    sum += v;
+                    v *= v;
+                    sum2 += v;
+                }
+                v = sum / w;
+                v *= v;
+                resultList.Add(sum2 / w - v);
+                l = 0;
+                for (i = length; i < count;)
+                {
+                    v = sampleList[i++];
+                    if (!double.IsNaN(v))
+                    {
+                        sum += v;
+                        v *= v;
+                        sum2 += v;
+                    }
+                    v = sampleList[l++];
+                    if (!double.IsNaN(v))
+                    {
+                        sum -= v;
+                        v *= v;
+                        sum2 -= v;
+                    }
+                    v = sum / w;
+                    v *= v;
+                    resultList.Add(sum2 / w - v);
+                }
+            }
+            return resultList;
+        }
+        #endregion
+
+        #region Overrides
+        /// <summary>
+        /// Returns the string that represents this object.
+        /// </summary>
+        /// <returns>Returns the string that represents this object.</returns>
+        public override string ToString()
+        {
+            double v; bool p;
+            lock (updateLock)
+            {
+                p = primed;
+                v = value;
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[M:");
+            sb.Append(moniker);
+            sb.Append(" L:");
+            sb.Append(length);
+            sb.Append(" P:");
+            sb.Append(p);
+            sb.Append(" V:");
+            sb.Append(v);
+            sb.Append("]");
+            return sb.ToString();
+        }
+        #endregion
+    }
+}
