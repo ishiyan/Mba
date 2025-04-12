@@ -1,0 +1,410 @@
+
+From: Warren Sarle <saswss@UNX.SAS.COM>
+Subject:      Re: Neural Network Modeling Q's
+
+Below is an excerpt that I wrote for the comp.ai.neural-nets FAQ, a
+discussion of neural nets and structural equation models, a compilation
+of neural net and statistical jargon, and directions for obtaining more
+information via ftp.
+______________________________________________________________________
+
+Q: How are neural networks related to statistical methods?
+
+A: There is considerable overlap between the fields of neural
+networks and statistics.
+
+Statistics is concerned with data analysis. In neural network
+terminology, statistical inference means learning to generalize from
+noisy data. Some neural networks are not concerned with data analysis
+(e.g., those intended to model biological systems) and therefore have
+little to do with statistics. Some neural networks do not learn (e.g.,
+Hopfield nets) and therefore have little to do with statistics. Some
+neural networks can learn successfully only from noise-free data (e.g.,
+ART or the perceptron rule) and therefore would not be considered
+statistical methods. But most neural networks that can learn to
+generalize effectively from noisy data are similar or identical to
+statistical methods. For example:
+
+ * Feedforward nets with no hidden layer (including functional-link
+   neural nets and higher-order neural nets) are basically
+   generalized linear models.
+
+ * Feedforward nets with one hidden layer are closely related
+   to projection pursuit regression.
+
+ * Probabilistic neural nets are identical to kernel discriminant
+   analysis.
+
+ * General regression neural nets are identical to Nadaraya-Watson
+   kernel regression.
+
+ * Kohonen nets for adaptive vector quantization are very similar
+   to k-means cluster analysis.
+
+ * Hebbian learning is closely related to principal component
+   analysis.
+
+Some neural network areas that appear to have no close relatives in the
+existing statistical literature are:
+
+ * Kohonen's self-organizing maps.
+
+ * Reinforcement learning (although this is treated in the
+   operations research literature as Markov decision processes).
+
+ * Stopped training (the purpose and effect of stopped training are
+   similar to shrinkage estimation, but the method is quite different).
+
+Feedforward nets are a subset of the class of nonlinear regression and
+discrimination models. Statisticians have studied the properties of this
+general class but had not considered the specific case of feedforward
+neural nets before such networks were popularized in the neural network
+field. Still, many results from the statistical theory of nonlinear
+models apply directly to feedforward nets, and the methods that are
+commonly used for fitting nonlinear models, such as various
+Levenberg-Marquardt and conjugate gradient algorithms, can be used to
+train feedforward nets.
+
+While neural nets are often defined in terms of their algorithms or
+implementations, statistical methods are usually defined in terms of
+their results. The arithmetic mean, for example, can be computed by a
+(very simple) backprop net, by applying the usual formula SUM(x_i)/n, or
+by various other methods. What you get is still an arithmetic mean
+regardless of how you compute it. So a statistician would consider
+standard backprop, Quickprop, and Levenberg-Marquardt as different
+algorithms for implementing the same statistical model such as a
+feedforward net. On the other hand, different training criteria, such as
+least squares and cross entropy, are viewed by statisticians as
+fundamentally different estimation methods with different statistical
+properties.
+
+It is sometimes claimed that neural networks, unlike statistical models,
+require no distributional assumptions. In fact, neural networks involve
+exactly the same sort of distributional assumptions as statistical
+models, but statisticians study the consequences and importance of these
+assumptions while most neural networkers ignore them. For example,
+least-squares training methods are widely used by statisticians and
+neural networkers. Statisticians realize that least-squares training
+involves implicit distributional assumptions in that least-squares
+estimates have certain optimality properties for noise that is normally
+distributed with equal variance for all training cases and that is
+independent between different cases. These optimality properties are
+consequences of the fact that least-squares estimation is maximum
+likelihood under those conditions. Similarly, cross-entropy is maximum
+likelihood for noise with a Bernoulli distribution. If you study the
+distributional assumptions, then you can recognize and deal with
+violations of the assumptions. For example, if you have normally
+distributed noise but some training cases have greater noise variance
+than others, then you may be able to use weighted least squares instead
+of ordinary least squares to obtain more efficient estimates.
+
+
+
+
+                  Neural Network and Statistical Jargon
+                  =====================================
+
+         Warren S. Sarle  saswss@unx.sas.com  May 12, 1995
+
+The neural network (NN) and statistical literatures contain many of the
+same concepts but usually with different terminology. Sometimes the same
+term or acronym is used in both literatures but with different meanings.
+Only in very rare cases is the same term used with the same meaning,
+although some cross-fertilization is beginning to happen. Below is a
+list of such corresponding terms or definitions.
+
+Particularly loose correspondences are marked by a ~ between the two
+columns. A < indicates that the term on the left is roughly a subset of
+the term on the right, and a > indicates the reverse. Terminology in
+both fields is often vague, so precise equivalences are not always
+possible.  The list starts with some basic definitions.
+
+There is disagreement in the NN literature on how to count layers. Some
+people count inputs as a layer and some don't. I specify the number of
+hidden layers instead. This is awkward but unambiguous.
+
+
+Definition                     Statistical Jargon
+==========                     ==================
+
+generalizing from noisy data   Statistical inference
+and assessment of the
+accuracy thereof
+
+the set of all cases one       Population
+wants to be able to
+generalize to
+
+a function of the values in    Parameter
+a population, such as the
+mean or a globally optimal
+synaptic weight
+
+a function of the values in    Statistic
+a sample, such as the mean
+or a learned synaptic weight
+
+
+
+Neural Network Jargon          Definition
+=====================          ==========
+
+Neuron, neurode, unit,         a simple linear or nonlinear computing
+node, processing element       element that accepts one or more inputs,
+                               computes a function thereof, and may
+                               direct the result to one or more other
+                               neurons
+
+Neural networks                a class of flexible nonlinear regression
+                               and discriminant models, data reduction
+                               models, and nonlinear dynamical systems
+                               consisting of an often large number of
+                               neurons interconnected in often complex
+                               ways and often organized into layers
+
+
+Neural Network Jargon          Statistical Jargon
+=====================          ==================
+
+Statistical methods            Linear regression and discriminant
+                               analysis, simulated annealing, random
+                               search
+
+Architecture                   Model
+
+Training, Learning,            Estimation, Model fitting, Optimization
+Adaptation
+
+Classification                 Discriminant analysis
+
+Mapping, Function              Regression
+approximation
+
+Supervised learning            Regression, Discriminant analysis
+
+Unsupervised learning,         Principal components, Cluster analysis,
+Self-organization              Data reduction
+
+Competitive learning           Cluster analysis
+
+Hebbian learning,              Principal components
+Cottrell/Munro/Zipser
+technique
+
+Training set                   Sample, Construction sample
+
+Test set, Validation set       Hold-out sample
+
+Pattern, Vector, Case          Observation, Case
+
+Reflectance pattern            an observation normalized to sum to 1
+
+Binary(0/1),                   Binary, Dichotomous
+Bivalent or Bipolar(-1/1)
+
+Input                          Independent variables, Predictors,
+                               Regressors, Explanatory variables,
+                               Carriers
+
+Output                         Predicted values
+
+Training values                Dependent variables, Responses,
+Target values                  Observed values
+
+Training pair                  Observation containing both inputs
+                               and target values
+
+Shift register,                Lagged variable
+(Tapped) (time) delay (line),
+Input window
+
+Errors                         Residuals
+
+Noise                          Error term
+
+Generalization                 Interpolation, Extrapolation,
+                               Prediction
+
+Error bars                     Confidence interval
+
+Prediction                     Forecasting
+
+Adaline                        Linear two-group discriminant analysis
+(ADAptive LInear NEuron)       (not Fisher's but generic)
+
+(No-hidden-layer) perceptron ~ Generalized linear model (GLIM)
+
+Activation function,         > Inverse link function in GLIM
+Signal function,
+Transfer function
+
+Softmax                        Multiple logistic function
+
+Squashing function             bounded function with infinite domain
+
+Semilinear function            differentiable nondecreasing function
+
+Phi-machine                    Linear model
+
+Linear 1-hidden-layer          Maximum redundancy analysis, Principal
+perceptron                     components of instrumental variables
+
+1-hidden-layer perceptron    ~ Projection pursuit regression
+
+Weights,                     < (Regression) coefficients,
+Synaptic weights               Parameter estimates
+
+Bias                         ~ Intercept
+
+the difference between the     Bias
+expected value of a statistic
+and the corresponding true
+value (parameter)
+
+Shortcuts, Jumpers,          ~ Main effects
+Bypass connections,
+direct linear feedthrough
+(direct connections from
+input to output)
+
+Functional links               Interaction terms or transformations
+
+Second-order network           Quadratic regression,
+                               Response-surface model
+
+Higher-order network           Polynomial regression, Linear model
+                               with interaction terms
+
+Instar, Outstar                iterative algorithms of doubtful
+                               convergence for approximating an
+                               arithmetic mean or centroid
+
+Delta rule, adaline rule,      iterative algorithm of doubtful
+Widrow-Hoff rule,              convergence for training a linear
+LMS (Least Mean Squares) rule  perceptron by least squares, similar
+                               to stochastic approximation
+
+training by minimizing the     LMS (Least Median of Squares)
+median of the squared errors
+
+Generalized delta rule         iterative algorithm of doubtful
+                               convergence for training a nonlinear
+                               perceptron by least squares, similar
+                               to stochastic approximation
+
+Backpropagation                Computation of derivatives for a
+                               multilayer perceptron and various
+                               algorithms such as the generalized
+                               delta rule based thereon
+
+Weight decay, Regularization > Shrinkage estimation, Ridge regression
+
+Jitter                         random noise added to the inputs to
+                               shrink the estimates
+
+Growing, Pruning, Brain        Subset selection, Model selection,
+damage, Self-structuring,      Pre-test estimation
+Ontogeny
+
+Optimal brain surgeon          Wald test
+
+LMS (Least mean squares)       OLS (Ordinary least squares)
+                               (see also "LMS rule" above)
+
+Relative entropy, Cross        Kullback-Leibler divergence
+entropy
+
+Evidence framework             Empirical Bayes estimation
+
+OLS (Orthogonal least squares) Forward stepwise regression
+
+Probabilistic neural network   Kernel discriminant analysis
+
+General regression neural      Kernel regression
+network
+
+Topologically distributed    < (Generalized) Additive model
+encoding
+
+Adaptive vector quantization   iterative algorithms of doubtful
+                               convergence for K-means cluster analysis
+
+Adaptive Resonance Theory 2a ~ Hartigan's leader algorithm
+
+Learning vector quantization   a form of piecewise linear discriminant
+                               analysis using a preliminary cluster
+                               analysis
+
+Counterpropagation             Regressogram based on k-means clusters
+
+Encoding, Autoassociation      Dimensionality reduction
+                               (Independent and dependent variables
+                               are the same)
+
+Heteroassociation              Regression, Discriminant analysis
+                               (Independent and dependent variables
+                               are different)
+
+Epoch                          Iteration
+
+Continuous training,           Iteratively updating estimates one
+Incremental training,          observation at a time via difference
+On-line training,              equations, as in stochastic approximation
+Instantaneous training
+
+Batch training,                Iteratively updating estimates after
+Off-line training              each complete pass over the data as in
+                               most nonlinear regression algorithms
+
+
+=======================================================================
+References:
+
+   Balakrishnan, P.V., Cooper, M.C., Jacob, V.S., and Lewis, P.A. (1994)
+   "A study of the classification capabilities of neural networks using
+   unsupervised learning: A comparison with k-means clustering",
+   Psychometrika, 59, 509-525.
+
+   Chatfield, C. (1993), "Neural networks: Forecasting breakthrough or
+   passing fad", International Journal of Forecasting, 9, 1-3.
+
+   Cheng, B. and Titterington, D.M. (1994), "Neural Networks: A Review
+   from a Statistical Perspective", Statistical Science, 9, 2-54.
+
+   Geman, S., Bienenstock, E. and Doursat, R. (1992), "Neural Networks
+   and the Bias/Variance Dilemma", Neural Computation, 4, 1-58.
+
+   Kuan, C.-M. and White, H. (1994), "Artificial Neural Networks: An
+   Econometric Perspective", Econometric Reviews, 13, 1-91.
+
+   Kushner, H. & Clark, D. (1978), _Stochastic Approximation Methods for
+   Constrained and Unconstrained Systems_, Springer-Verlag.
+
+   Michie, D., Spiegelhalter, D.J. and Taylor, C.C. (1994), _Machine
+   Learning, Neural and Statistical Classification_, Ellis Horwood.
+
+   Ripley, B.D. (1993), "Statistical Aspects of Neural Networks", in
+   O.E. Barndorff-Nielsen, J.L. Jensen and W.S. Kendall, eds.,
+   _Networks and Chaos: Statistical and Probabilistic Aspects_,
+   Chapman & Hall. ISBN 0 412 46530 2.
+
+   Ripley, B.D. (1994), "Neural Networks and Related Methods for
+   Classification," Journal of the Royal Statistical Society, Series B,
+   56, 409-456.
+
+   Sarle, W.S. (1994), "Neural Networks and Statistical
+   Models," Proceedings of the Nineteenth Annual SAS Users
+   Group International Conference, Cary, NC: SAS Institute,
+   pp 1538-1550.
+
+   White, H. (1989), "Learning in Artificial Neural Networks: A
+   Statistical Perspective," Neural Computation, 1, 425-464.
+
+   White, H. (1989), "Some Asymptotic Results for Learning in Single
+   Hidden Layer Feedforward Network Models", J. of the American Statistical
+   Assoc., 84, 1008-1013.
+
+   White, H. (1992), _Artificial Neural Networks: Approximation and
+   Learning Theory_, Blackwell.
+
+

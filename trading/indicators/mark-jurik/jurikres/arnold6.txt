@@ -1,0 +1,496 @@
+NEURAL NETS FOR PERSONAL INVESTING: ISSUES
+by William Arnold
+
+This version, submitted to us by the author, is an adaptation of his 
+original article submitted to HEURISTICS:  The Journal of Intelligent 
+Technologies, published in their special issue: Neural Networks for 
+Financial Systems, v9, #1.
+ 
+------------------------------------------------------------------------ 
+ 
+In business, Neural Nets have found a diverse range of applications, being 
+used to predict everything from the highest achievable selling price for a 
+two-bedroom house with a swimming pool and good "curb appeal" to the effect 
+of various wage levels on the corporate staff attrition rate.  Financial 
+institutions now use the Networks almost routinely to aid in securities 
+analysis, and the applications used in this process are understandably 
+complex and expensive to create and maintain. 
+   
+This does not mean, though, that only financial professionals are capable 
+of constructing and using such programs. Many commercial Neural Net 
+products include financial forecasting tutorials because these provide 
+effective demonstrations of the most powerful program features.  
+Examining these demonstration models, it is apparent that the architecture 
+of the networks is similar to that of chemical, environmental or 
+character-recognition programs.  Perhaps this observation is standing the 
+matter on its head, because in the development process many software 
+packages were initially designed with the lucrative financial-forecasting 
+market in mind, with other applications added on later to increase 
+marketability. 
+ 
+Although they are useful in demonstrating features, these tutorials are 
+more or less toy applications -- they don't deal with real securities, real 
+data or real money.  Knowledge of setting up and implementing the networks 
+is only part of what is required to bridge the gap between a tutorial and a 
+practical  personal investment tool.  The ultimate goal may be to develop a 
+network or group of networks to aid in investment decisions, but even if 
+this goal is not achieved , the effort almost certainly will yield 
+knowledge both of the applications and of the financial markets as a 
+corollary benefit.   
+ 
+Actually, constructing the network itself may not be the primary problem.
+It may be putting a network together without expending 
+more time and money than we want to commit.  We can apply this insight 
+immediately.  We need to select a software package, either for purchase or 
+online access.  There are many such packages available, falling into two 
+categories : stand-alone applications and those designed to add into 
+spreadsheets such as Microsoft Excel.  Deciding which of 
+these to choose is based on the availability of the spreadsheet, and 
+perhaps as importantly on operator facility with the spreadsheet program.  
+Various data entry routines and data manipulations are obviously required 
+in constructing the networks, and utilities included in the stand-alone 
+packages are specifically designed to facilitate these. On the other hand, 
+making networks using an add-in package may serve to increase operator 
+capabilities with the spreadsheet program. 
+ 
+Very low-cost shareware packages are available on the Internet; some of 
+these have excellent features.  The drawback of getting programs in this 
+way is that when it comes to support you get what you pay for.  Moving 
+into a new application, particularly in unfamiliar terrain, can be expected 
+to entail getting help from those who have been through the exercise 
+before.  Additionally, for commercial software packages evaluations are 
+available[1] to facilitate easy comparison.  The value of the time saved  
+in using the telephone-help service provided by commercial vendors, and the 
+more complete support that is provided must be weighed against the 
+additional upfront cost.  In selecting the network, it is perhaps best to 
+look at the cost of the telephone support as well; this argues for buying a 
+software package from a nearby company. 
+ 
+Once the software is bought, unpacked and installed, it is a good idea to 
+go through the tutorials ... all of them. It soesn't hurt to see all of 
+the features of the software deemed worthy of display by the programmers.  
+As a side excursion, particular attention should be paid to any horse-
+racing applications that are included, since handicappers are apparently 
+among the most successful users of Neural Net programs.  It may be that 
+there is a higher signal-to-noise ratio in data from Saratoga than there is 
+in data from Wall Street. 
+ 
+The software documentation, and the programs themselves, are tempting, but 
+at this point they are distractions. We could well experiment with 
+transfer functions, learning parameters, and the like; that's what 
+engineers and scientists like to do. For financial applications, though, 
+the network nuts and bolts are in many cases considered fine-tuning tools 
+even by advanced practitioners.  To see how, or even whether such tinkering 
+will be useful, we need a first-approximation network.  To get this, there 
+are a few tiny decisions we must make. For example, what are we going to 
+try to predict (in neurocomputing terms, what's the pattern?).  What data 
+will be used to predict it?  
+ 
+The network is a market-timing tool, but a well-selected target security is 
+crucial to the overall success of the investment.  In the search for a 
+pattern worthy of analysis and eventual investment, some additional 
+guidance is provided by Peter Lynch, an enormously successful Mutual Fund 
+manager turned author.  His five-word advice to investors :  Invest In What 
+You Know.  As technologists, if we are aware of a given technology area 
+that is currently doing well, this is an excellent choice, since we may 
+know more about technology's future than  do most investors.  However, some 
+investors may not recognize the importance of selecting securities that are 
+already showing good economic performance.  One of the oldest saws on Wall 
+Street is "don't fight the tape", referring to the ticker-tape where 
+transactions are displayed.  It is indeed possible to find bargains in 
+areas that are not generally prosperous, but this is more an exercise for 
+gamblers or for those who invest lots of time unearthing opportunities than 
+for ordinary investors. 
+ 
+More specifically, what sort of investment vehicle should be selected as 
+the target?   The network is being counted upon to cover for lack of 
+sophistication in securities analysis, but we face a signal-to-noise 
+problem as individual securities may fluctuate in price unpredictably.  
+Fortunately, the Mutual Fund industry has developed investment vehicles 
+that are very well tailored for network requirements.  Several fund 
+families offer what are called sector funds: baskets of various stocks 
+concentrated in a particular indistry.  Fidelity, Vanguard, T. Rowe Price 
+and Invesco, among others, offer such funds.  The sales charges and expense 
+ratios for these funds are available at any library; many investors feel 
+that these charges are a fair price for the diversification of investments 
+offered by the funds.  This diversification is meant to shield investors 
+somewhat from adversities affecting individual companies, but it also has 
+the effect of damping fluctuations in share prices.  
+
+An additional 
+advantage of Mutual Funds is the ease with which they can be bought and 
+sold, and this may come in handy if the investment regime indicates 
+frequent buying and selling.  Of course, considerations of restrictions and 
+costs of such transactions apply here as elsewhere.   One criterion 
+peculiar to the selection of a pattern for the Neural Nets involves the 
+magnitude of the share price.  If the price per share is relatively high, 
+then a given percentage fluctuation will be a larger value, which may be 
+easier for the network to recognize.  Another way of looking at this is to 
+observe that more shadings of value increase or decrease are possible if 
+the magnitude of  price change can be large or small.  Additionally, when 
+the Net Asset Value of the security is calculated for each time period, 
+there is some rounding error involved. As the share price of a security 
+grows, this error becomes less important. 
+ 
+In addition to selecting a target security, consideration must be given to 
+data that will be used to predict its future value.  If we are 
+approaching this as a pattern-recognition problem, we will be looking to 
+interpret some sort of  business-cycle data.  But opening up a copy of 
+Barron's or the Wall Street Journal reveals page after page of data, any 
+column of which is a potential input.  A sort of overall, fundamental 
+approach is needed to select the useful inputs. 
+ 
+The number and variety of the sector funds suggests an approach based on 
+the observations that uptrends in the performance of certain  economic 
+sectors tends to lead or lag that of others in a fairly predictable 
+fashion(2). Observers of market history agree that with each passing year 
+institutions have more influence in the market.  Collectively, Mutual Fund 
+managers paid on the basis of performance against benchmark indices such as 
+the Dow Jones Industrials or NASDAQ Composite have a great deal of 
+influence over the direction of the market.  In quest of superior 
+performance, these managers tend to jump from one area of the market to the 
+next, riding industry trends and switching emphasis with the ebb and flow 
+of profitability in various sectors. The idea of using the price 
+performance of the sector funds as inputs is appealing enough.  There is 
+even a chance that we could construct networks consisting entirely of the 
+price action for the funds, with some funds playing the role of pattern on 
+some networks, and as input on others. 
+ 
+But this may not be a good idea for several reasons.  For example, even the 
+dozens of sector funds leave some areas of the economy sparsely covered.  
+For another, the funds are managed for maximum performance, regardless of 
+how the sector or economy is doing at the time.  Holdings of such funds are 
+thus often confined to just a few companies, and substantial cash may 
+accumulate in some funds.  In addition, the funds pay distributions,  
+giving back a portion of their earnings to shareholders.  When the fund Net 
+Asset Value is adjusted for these distributions, the result is a sudden 
+one-day drop in the share price unrelated to the actual market action for 
+that day.  Since the price for later days reflects this charge, there is no 
+straightforward way in which to adjust for this phenomenon.  In the pattern 
+security, we can dig into the spreadsheet and make an acceptable adjustment 
+by hand.  For dozens or hundreds of inputs, however, this process is not 
+too satisfactory. 
+ 
+There is also the question of where to get data for our inputs.  Virtually 
+every kind of material imaginable is available on the Internet.  As of this 
+writing, though, data of the type that we need is  not available online--
+not for free, in any event. No matter how the data is obtained, some sort 
+of underlying rationale is needed as a guide in selecting it. 
+ 
+Data on stock-market sectors, suitable and seemingly tailor-made for Neural 
+Net use, is in fact cheaply available. The Standard and Poors Company has 
+formulated composites of dozens of industry groups(and sub-groups, and it 
+often appears, sub-sub-groups).  These composites are pre-adjusted for 
+distributions to shareholders, and are published in tables.  Their most 
+convenient form is the table of  index weekly closing prices, entitled 
+Current Statistics, available at most libraries.  If we use these data as 
+inputs, we can match them with the weekly closing prices of our pattern 
+Mutual Fund, to predict the closing price of the fund one week in advance. 
+ 
+These data are also available, on a daily as well as a weekly basis, from 
+download services, but the use of stock-analysis software and a download 
+service may add hundreds of dollars to the cost of the network, and may 
+wipe out any potential profits we stand to make.  Many professional 
+securities traders find weekly data sufficient for their purposes(3).There 
+is an additional argument for sticking to weekly data:  to cover a given 
+time period, a weekly network will require only one-fifth as many  
+spreadsheet entries as a daily network .  The cheapest way of accessing the 
+data is indeed to hand-keypunch the S&P data into the spreadsheet.  
+Presumably we will do this ourselves, as we wouldn't dream of asking a 
+subordinate or spouse to toil at such drudgery.  This is a lot of data 
+entry, so a careful look at the data is merited:  is there some way to 
+avoid entering data on all of the over 100 groups covered by S&P? 
+ 
+There is in fact ample reason to believe that some trimming can be done.  
+Practically, each Neural Net seems to function best with some optimum 
+number of inputs:  given too few, the network doesn"t "learn" all of the 
+dimensions of the data surface, and given too many, the network takes an 
+excessively long time adjusting weights between neurons reflecting 
+redundant information--and we run the risk of "memorization" as well(4).   
+Without a lot of experimentation, there is no way of determining how many 
+of these groups we can cut out. As a reasonable approximation, and keeping 
+in mind that we will find it easier to cut data later than to add it, we 
+can go through the groups, eliminating obvious redundancies, and come up 
+with a reduction of about 50%.   We should be careful, though.  In general 
+Neural Net Theory, and also specifically in financial applications, 
+considerable thought has been given to the process of "pruning" inputs(5).  
+On the face of things, it makes sense not to include two inputs possessing 
+a Correlation Coefficient of, say, 0.8.  However, the advisability of 
+deleting one of these as an input lies in the importance of the 
+uncorrelated information that will be lost (this amounts to 36% based on the 
+correlation). The information discarded may turn out to have been 
+indispensable. 
+ 
+As an example, consider the following list of Industry Groups as the input 
+matrix for the networks: 
+ 
+S&P 100                  Capital Goods            Consumer goods 
+Energy composite         Entertainment/Leisure    Aluminum 
+Automobiles              Heavy Duty Trucks        Building Materials 
+Chemicals Composite      Specialty Chemicals      Communications Eqpt		 
+Conglomerates            Containers(Metal/Glass)  Insurance Composite  
+Paper Containers         Electrical Equipment     Defense Electronics 
+Electronic Instruments   Engineering/Construction Foods 
+Gold Mining              Hardware/Tools           Homebuilding 
+Health Care Composite    Health Care/Drugs        Medical Products 
+Hotel/Motel              Household Products       Machine Tools 
+Diversified Industrials  Manufactured Housing     Metals Misc. 
+Office Supplies          Oil composite            Oil Equipment 
+Paper/Forest Products    Pollution Control        Savings and Loan 
+Publishing               Retail Store Composite   Retail/Department Stores 
+Retail/Food              Retail/Gen. Merchandise  Steel 
+Textile                  Electric Companies       Natural Gas 
+Telephone                Airlines                 Railroads 
+Truckers                 Bank Composite           Center Banks 
+Regional Banks           Computers  
+						 
+This would leave out the following groups, among  many others: 
+ 
+S&P Small Cap Index      High Tech Composite      Low Price Common Stock 
+Autos(except GM)         Beverages Alcoholic      Beverages/Soft Drink 
+Broadcast Media          Computer Software        Computers(except IBM) 
+Elec/Semiconductors      Cnsmr. Product Dist      Healthcare 
+Hospital Management      Leisure Time             Shoes 
+
+Even with the loss of information from the omitted groups, we have a 
+sizable input matrix.  Nonetheless the selections cover most of the 
+economy, with overlapping coverage for the areas most likely to help in our 
+prediction.  Yet these selections reflect a conscious effort to cover 
+diverse areas of the economy instead of concentrating on technology itself. 
+ 
+There will of necessity be strict limits on the time period that the 
+network covers, and there are some clues as to how long this might be.  In 
+its own fashion, our network is to make value judgments on the economic 
+factors  driving the overall economy.  These change over time--after all, 
+that is part of the rationale for the construction of the network from 
+sector data.  Over how long a period can these factors be expected to 
+remain consistent enough to give us a solid pattern? 
+ 
+Mutual funds advertise performance based on one-year and ten-year figures, 
+set in type of various sizes depending on how favorable these figures 
+appear.  While Fund Managers might grudgingly reconcile themselves to being 
+evaluated on performance for periods as short as one year, it is no secret 
+that such evaluations are short-sighted.  At the other end of the scale, we 
+can't expect coherent economic forces over ten years.  Three to five years 
+is a reasonable compromise, and many Technical Analysts evaluate time-
+series data using weighted or exponentially smoothed averages, which  by 
+greatly decreasing the influence of the earliest data give extra, well, 
+weight to the argument for a three-year period. 
+ 
+In constructing the network, difference columns are formed from the raw 
+price data; this enables the network to see the price fluctuations more 
+dramatically than  if the raw prices are used. To filter out some random 
+noise, moving averages are formed, and it is at this point that a 
+difference between daily and weekly data becomes apparent.  Daily data 
+obviously contains more noise than weekly data--effectively, the weekly 
+data is self-smoothing.  While financial institutions are not particularly 
+forthcoming regarding the particulars of their network Programs, experiment 
+has shown that daily data often requires five-period smoothing, rendering 
+it almost equivalent to weekly data.  For weekly figures two to three 
+periods of smoothing are often used. 
+ 
+Each weekly set of inputs or fact presented to the network must contain 
+some time history to produce a prediction.  Ignoring the  moving-average 
+smoothing for the moment, note that use of a  three-period time distance to 
+the oldest prediction takes into account events that  have occurred a month 
+before the prediction date.  Without more information regarding the 
+relative weight accorded to older data, it is reasonable to use inputs 
+representing prices one, two and three weeks ago, with the possibility of 
+sorting things out better after obtaining performance figures for the 
+network. 
+ 
+Inputs may be grouped in several ways.  Using, for instance, the S&P Gold 
+Mining Stock Index as a starting point, we can group the inputs as the  
+Gold Index raw price difference,  Gold Index moving average, and this 
+moving average one, two, and three periods ago.  We can also look at the 
+inputs in classes of  all the raw  index price differences, moving 
+averages, and averages for the various time periods.  In constructing the 
+spreadsheeet, column headings will facilitate our analysis of the network 
+by designating the Gold Index as, say, p18, the difference as d18, moving 
+average as m18, and the time-displaced averages as t18, 2t18 and 3t18.  If 
+we get a statistical report of the importance of the various inputs, 
+tabulated by the name of each input, we can (somewhat) easily form 
+conclusions about which inputs have the highest influence.  We might also 
+happen into a situation where, for example , the time-displaced values from 
+two periods ago turn out have high predictive capacity.  Without systematic 
+naming of inputs, this sort of hidden relationship is difficult to 
+recognize. 
+ 
+With 56 inputs processed through moving averages and time displacements, 
+the spreadsheet contains a total of 280 inputs.  Using a commercial stand-
+alone Neural Network package and a hand-keypunched textfile spreadsheet 
+containing a 143-week run of S&P Index data, a number of networks were set 
+up and tested.  After  some experimentation, the Fidelity Select Technology 
+Fund was picked as the target security.  Networks trained using the T. Rowe 
+Price Science and Technology Fund, the Invesco Strategic Technology Fund 
+and the yield on the 30-year U.S. Treasury bond generated less accurate 
+predictions for this input set, with the Invesco Fund networks showing some 
+usefulness and the bond yield networks the least effective.  The software 
+divided the data set into training(90%) and test(10%) sets.  The noisiness 
+of the S&P data means that this division is more likely to yield an 
+unrepresentative test set than would be the case if the data were more 
+homogeneous(5).  Instead of the usual practice of reserving 10% of cases 
+for testing, an increase to 15% was considered; for these experiments 
+problems were adequately minimized by making many networks with shuffled 
+fact files. 
+ 
+Once the spreadsheet was made and the various time-displaced moving 
+averages were formed, some preliminary experiments were done to determine 
+optimum size.  The rule of thumb for establishing the number of neurons is 
+to begin at a figure midway between the number of inputs and outputs; for 
+our 280 inputs, this yielded an initial size of 140 neurons.  Experiment 
+showed, however, that a much smaller number still produced effective 
+networks. 
+ 
+The networks were trained using one of the approaches commonly used with 
+Neural Network programs(6). Two parameters were varied : the Training 
+Tolerance , or maximum acceptable proportional error necessitating no 
+adjustment of Network weights, and the proportion of correct facts (a fact 
+comprises all of the inputs corresponding to a single day or week, and the 
+pattern value corresponding to the inputs).   Training was started with a  
+Training Tolerance of .20 and a requirement that the network train until 80 
+% of predictions are correct.  These specifications were easily met but  
+yielded an unfinished and not very useful network.  The Tolerance was 
+subsequently tightened and the number of required correct facts increased 
+in turn.  For example, the  program used offers histograms indicating not 
+only how many facts cause correct predictions, but also some indication of 
+the size of errors on incorrectly predicted facts.  With this information 
+useful values for this progressive tightening process become 
+apparent(Figure 1).  If in many cases the network misses the first 
+tolerance by a small amount, it should pay  to tighten tolerances slightly.  
+For other networks it may become obvious that such tightening is 
+ineffective until more facts are brought into line at a looser initial 
+Tolerance.  The overall predictive capacity of the network may actually be 
+damaged if training is continued until the most extreme facts are brought 
+within training tolerance.  
+ 
+An overall statistical error for the predictions can also be easily 
+calculated, but it has often been observed that this parameter is no more 
+than a  loose guide toward actual network performance.  In any case, 
+varying the Tolerance and the number of acceptable facts in this way has 
+been found to work, and it is common for such networks to behave in an 
+almost organic fashion.  Typically when a parameter is varied after having 
+been kept constant for a while, the network will in a sense lose its 
+equilibrium and perform poorly.  With more adjustments, performance will 
+improve, sometimes quite suddenly.Once this alternate variation seems to 
+have reached the point of diminshing returns,  statistical analysis may be 
+of value in refining the network.  In any case, once training has proceeded 
+to its limit(governed in some cases by the amount of time available, in 
+others by limitations of the data) predictions are tested.  For the 
+experiments set forth below, the same value  was used  as that of 
+permissible training error. In practice, testing tolerances are often less 
+stringent than those used for training. 
+ 
+Note the training times, and overall error rates for the following neuron 
+numbers, based on 4 shuffled replicates of the 143 weekly closes, for a 
+total exposure of 572 facts: 
+ 
+Number of Neurons   Avg. Training Time,sec   Number of Errors 
+-------------------------------------------------------------
+4+18(2 layers)               263                    62 
+24                           234                    65 
+18                           261                    61 
+12                           280                    65 
+ 
+The latest date covered by the data set was April 28, 1995. Shortly after 
+this date, the S&P data began to reflect a virtually uninterrupted rise in 
+the  market ; networks constructed from such trending data reflect the 
+overall trend rather than the influence of specific inputs.  Several 
+representative 18- Neuron networks were constructed, and their performance 
+against the last six weeks of data was evaluated. 
+ 
+                  Actual	      Network Predicted Value	 
+End of Period	Closing Change		 "A"     "B"     "C" 
+---------------------------------------------------------------------
+3/22/95		 +1.30			-0.25   +0.30   +0.22 
+3/29/95		 -0.78			-0.79   -0.38   -0.83	 
+4/05/95		 +1.16			+0.06   +0.28   +0.22	 
+4/12/95		 -1.90			-1.55   -1.60   -1.65	 
+4/19/95		 +2.42			+1.39   +1.27   +2.01	 
+4/26/95		 +1.02			+0.50   -0.25   +0.52 
+ 
+It should be noted that even with very brief training and limited use of 
+program fine-tuning features, the networks produced good predictions of 
+market direction, and passable predictions of magnitudes of price changes.  
+This period was marked by no fewer than four reversals of  market 
+direction;  if the networks were mere trend-following devices, the 
+predictions would not have been as accurate as those tabulated above.  
+Similar results were found for networks of other sizes.  The April 5 data 
+was poorly forecast by all of the networks observed.  The most plausible 
+explanation for this was that over that period market conditions not 
+reflected by the input set had a pronounced impact on prices.  Reflecting 
+on the many short-term influences that do impact individual securities and 
+even sectors, the effectiveness of even the more sophisticated networks 
+used by institutions is surprising. Using the statistics generated by the 
+program, we were able to determine that despite their simplicity the 
+predictive capacity of these weekly S&P Index networks was approximately 
+equal to that of many networks in use by financial institutions(7). 
+ 
+For the S&P data set, it seemed plausible that even at these smaller neuron 
+numbers the inputs could be pruned.  Using the statistical report 
+accompanying the software the sensitivity to inputs was tabulated and the 
+10% of inputs ranked as least influential were dropped.  As the program 
+faced fewer inputs, training times were similar to those of networks facing 
+a full input set even though more runs were required.  Again, several 
+representative  networks were tested on the March and April data. 
+ 
+                   Actual		Network Predicted Value	 
+End of Period	Closing Change		 "D"     "E"     "F" 
+------------------------------------------------------------------
+3/22/95		+1.30			+0.29   +0.99   +0.29	 
+3/29/95		-0.78			-0.48    0.00   -0.51	 
+4/05/95		+1.16			+0.52   +0.73   +0.48	 
+4/12/95		-1.90			-1.79   -1.38   -0.83	 
+4/19/95		+2.42			+1.32   +0.01   +1.41	 
+4/26/95		+1.02			+0.67   -0.08   +0.95 
+ 
+For this small sample, the average error was less for the full data set 
+than for the pruned-input networks.  These results are intended to indicate 
+the type of adjustments  that are easily done, and to give a rough outline 
+of the results that may be obtained.  While the short training times for 
+these networks were a byproduct of the effort to minimize expenditure of 
+time and money on input data, the speed with which such networks can be 
+produced means that replicate networks can be made to produce a sort of 
+network consensus decision.  Because each network begins with random 
+weights between neurons, the production of several such replicates provides  
+the fullest use of the information content of the inputs. 
+ 
+The decision of whether to use the network could be based solely on 
+whether it traces the target security's price with sufficient precision.   
+Yet it should be noted that if testing indicates that the network at least 
+predicts the direction of price moves, even predictions that might be 
+classified incorrect by testing criteria may be of value in reinforcing 
+investment decisions made using other information; the networks  then 
+function as a classification mechanism. 
+ 
+As with any management tool (and indeed, like some Neural Net applications 
+not directly concerned with business) the practical function of 
+the network is to give added confidence that decisions are correct.  Such 
+confidence is a valuable commodity in investing; as a rough estimate of its 
+possible value, consider that full-commision brokers may charge several per 
+cent of the value of transactions for their services, the most highly 
+valued of which is market intelligence. Still, there may be data sets, or 
+periods in the fluctuations of particular securities, where useful networks 
+may be difficult or even impossible to construct.  Whatever market 
+knowledge is gained in constructing the network remains of value whether or 
+not the network can be used for real-life decisions. 
+ 
+References
+ 
+1. M.Jurik , "Consumer's Guide to neural network software". Futures, July 
+1993
+ 
+2. L. Valentine and D. Ellis, Business Cycles and Economic Forecasting, 
+South-Western Publishing, 1991.
+ 
+3. R. Colby and T. Myers, Encyclopedia of Technical Market Indicators, Dow-
+Jones Irwin, 1988, Chapter 9
+ 
+4. J. Lawrence, Introduction to Neural Networks, CSS Publishing, 1993
+ 
+5. M. Jurik, Financial Forecasting and Neural Networks, Box 2379, Aptos, CA 
+95001, 1991.
+ 
+6. Brainmaker User's Manual, California Scientific Software, 1993.
+ 
+7. J. Lawrence, personal communication.

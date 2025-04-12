@@ -1,0 +1,123 @@
+Neural Net Primer
+
+A brief introduction to the use of neural networks suitable for futures forecasting
+
+As the cost of computing power has declined, the popularity of Neural Networks as 
+an analytical tool to provide solutions to difficult problems has increased 
+dramatically.  Once considered an arcane area for academic research, neural nets 
+are now widely offered as a tool for financial time-series analysis by individual 
+traders and investors.
+
+A lot has been published about Artificial Intelligence and Neural networks.  While 
+on the surface, these would seem to be similar, if not identical, avenues of 
+research, they are actually quite different.  Artificial intelligence is largely a 
+study of symbolic logic, which attempts to emulate the analytical capability of the 
+mind and its ability to remember and recall facts.  Typically AI techniques are 
+used either for control systems or in expert systems to encapsulate the memories 
+and decision-making process of people with encyclopedic knowledge in a particular 
+specialty in order to automate response to inquires in that area.  AI computer 
+programs are typically written in Lisp and Prolog - languages optimized for dealing 
+with symbolic logic.
+
+Neural networks, on the other hand, attempt to duplicate the actual parallel 
+processing capability of the nervous system at an elementary level to perform some 
+control or analysis function.  The physical implementation could be either a solid-
+state circuit or a computer program.  A neural network is composed of simple 
+processing elements communicating through a rich set of interconnections with 
+variable strengths.  The network is trained rather than programmed, with more 
+sophisticated networks being structured to train themselves or learn as they 
+process information.
+
+PCs utilize the von Neumann architecture which operates by reading successive 
+instructions and data from memory, processing those instructions in a physical CPU 
+circuit and returning results back to memory.  By contrast, in neural networks the 
+program permeates the structure of interconnected neurons itself.
+
+The elemental network component is a neuron modeled after the biological elements 
+of our nervous system and performs its function in three steps.  First, each neuron 
+receives a pattern of input signals from either the network inputs or the output of 
+other neurons.  The signals enter at points called synapses because of their 
+functional similarity to their biological counterparts.  Synapses each have their 
+own weights, passing their programmed percentage of input signal into the neuron.  
+Secondly, the combined input stimulation is modified by the transfer function of 
+the neuron; and third, the output is passed through network interconnections to one 
+or more other neurons.
+
+All signals in a neural network are typically normalized to operate within some 
+limits such as 0 to +1 or -1 to +1 - a time-consuming part of input data 
+preparation.  In addition, input data may be pre-processed or filtered to enhance 
+the effectiveness of the network.  Synapses usually have a programmable weighting 
+factor that determines the percentage of input signal passed into the neuron.  In 
+addition, a neuron can have a threshold level that must be exceeded before any 
+signal is passed.  As in our own nervous system, the signal might also be delayed.  
+Almost any imaginable synapse weighting transfer functions can be used but simple 
+multipliers are fairly common.
+
+The neuron's internal transfer function, called its "activation" in neural-net 
+jargon, is almost invariably non-linear.  A common behavior is described as sigmoid 
+or S-shaped, with little output being produced until a threshold of combined input 
+signal is approached, then rising to some saturation output with little additional 
+change as input increases to maximum.  This non-linear "squashing" behavior keeps 
+signals within the design limits at each point in the network.  Although signals 
+may be selectively routed from the network output back to the input to perform 
+recurrent processing, they pass through individual neurons within the network from 
+input to output unidirectionally.
+
+Probably the most successful and widely studied neural network system is the 
+backpropagation network.  Signals actually flow forward from input to output as 
+just described, but the name of this architecture comes from the process used in 
+training, or programming the network for use.  To understand backpropagation and 
+relate conceptually to our intended use of neural networks, suppose the network 
+will be used to track five related markets and produce a forecast of the direction 
+of the target market three bars in the future.
+
+Imagine a fully-interconnected network consisting of three layers - five neurons in 
+the first, input layer, each with its own input; three neurons in the second layer, 
+each receiving an input from each of the first layer neurons; and one neuron in the 
+third, output layer receiving the three outputs from the middle layer.  This would 
+require 15 interconnections between the first and second layer and 3 
+interconnections between the second and third layer, each ending in a synapse.  The 
+synaptic weights of these 18 interconnections plus the 5 synapses on the input 
+neurons determine the behavior of the network and are the target of programming 
+during the training process.  The middle layer is often described as a hidden layer 
+because of its lack of direct external connection.
+
+Initially all synaptic weights would be set to low, random values.  The network 
+would then be presented with a series of input patterns from the test data set.  
+Based on the error between the actual output and the price three bars forward in 
+the test data, the synaptic weights would get adjusted in such a manner as make the 
+network output more closely approach the known forecast value.  This transfer of 
+the output error back to adjust the synaptic weights of the earlier layers is the 
+process referred to as backpropagation.
+
+After repeating this process on the test data set many times until the output error 
+is within acceptable limits, the synapses would have characteristic weights such 
+that the transfer function of the network as a whole would respond to the test 
+inputs with the appropriate output value.  At this point the neural network is 
+considered "trained".  The synaptic weights are, in effect, the coefficients of 
+terms in a non-linear transfer function too complex to have been derived by direct 
+mathematical means with any reasonable amount of effort - in our example, an 
+expression with over 20 terms!  To the extent that the test data is representative 
+of future conditions that the network will see, its output will then provide the 
+desired forecast.  This is confirmed by passing test data through the network to 
+check that the output error is within acceptable limits before actually putting the 
+network into operation.
+
+Complexity of useful neural network structures varies from the simple adaline, or 
+ADAptive LINear Element, consisting of a single neuron, to multi-dimensional cube-
+like arrays with full interconnection utilizing thousands of neurons, sometimes 
+with multiple feedback paths.  The adaline, while it seems simplistic, has been 
+quite successful in applications such as high-speed modems or for echo cancellation 
+on telephone lines.  Large arrays are more commonly used for pattern recognition 
+applications such as artificial vision, weather prediction or turbulent flow study.  
+A medium-sized system is more appropriate for our application - correlation of 
+several markets and/or other fundamental factors to extract useful forecasting 
+signal out of the background market noise.
+
+As the cost-performance of PCs improves, the popularity of neural networks 
+continues to increase due to their ability to provide inexpensive, generalized 
+solutions to problems such as futures price forecasting which defy analysis by 
+conventional means.
+
+Don W. Fitzpatrick - 3/4/97
+fitz@interaccess.com
