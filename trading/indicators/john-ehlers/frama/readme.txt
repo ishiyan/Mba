@@ -1,7 +1,6 @@
+tasc_v23_2005_10_pp81-82_John_Ehlers-Fractal_Adaptive_Moving_Averages
 
-FD_i = \frac{\ln(N1 + N2) - \ln(N3)}{\ln(2)}
-
-FD = \lim_{s \to 0} \frac{\log N(s)}{\log(1/s)}
+https://www.mesasoftware.com/papers/
 
 
 @book{falconer2014,
