@@ -1,0 +1,510 @@
+Below is a concise tutorial drawn from the pages you shared from Tushar S. Chande’s “The New Technical Trader” (1994), where he defines and works through the Chande Momentum Oscillator (CMO).
+
+1) A brief history
+- Origin: The CMO was introduced by Tushar S. Chande in The New Technical Trader (1994).
+- Motivation at the time: Chande wanted a “pure” momentum oscillator that:
+  - uses both up‑ and down‑day momentum symmetrically,
+  - avoids the built‑in smoothing used by RSI (which introduces lag and can mask short‑lived extremes),
+  - is bounded so momentum can be read at a glance.
+
+2) Why it was created
+- RSI’s weakness (as Chande saw it): RSI uses Wilder’s smoothing of gains and losses, which lags and can blunt sharp, short‑term momentum bursts. RSI also uses only up moves in the numerator.
+- CMO’s design goals:
+  - Directly reflect net momentum (up minus down) over a fixed lookback.
+  - Plot on a bounded scale from −100 to +100, making interpretation symmetric and immediate.
+  - Use unsmoothed (raw) sums so short‑lived extremes remain visible. Smoothing, if desired, is optional and applied after the fact.
+
+3) How it works (concept)
+- For each day, compute the day’s signed change (today’s close minus yesterday’s close).
+- Split that change into two non‑negative pieces:
+  - Up‑day momentum: max(change, 0)
+  - Down‑day momentum: max(−change, 0)
+- Over the last x days, sum those two series:
+  - Su = sum of up‑day momentum over x days
+  - Sd = sum of down‑day momentum over x days
+  (For the CMO, Su and Sd are the raw, unsmoothed sums.)
+- Compute the bounded net momentum ratio:
+  - CMO = 100 × (Su − Sd) / (Su + Sd)
+  - Range: −100 to +100. Positive values mean net upward momentum; negative values mean net downward momentum.
+- Relationship to an “unsmoothed RSI”: If RSI′ is defined with the same raw sums as RSI′ = 100 × Su/(Su + Sd), then CMO = 2 × RSI′ − 100.
+
+4) Calculation algorithm (pseudocode)
+
+Inputs
+- closes: array of closing prices
+- N: lookback length (e.g., 10, 14, etc.)
+
+Derived series
+- delta[i] = closes[i] − closes[i − 1] for i ≥ 1
+- up[i]   = max(delta[i], 0)
+- down[i] = max(−delta[i], 0)
+
+Rolling sums (unsmoothed)
+- Su[i] = up[i − N + 1] + … + up[i]
+- Sd[i] = down[i − N + 1] + … + down[i]
+
+CMO
+- If i < N: CMO[i] = null (insufficient history)
+- Else if Su[i] + Sd[i] == 0: CMO[i] = 0 (no movement in window)
+- Else: CMO[i] = 100 × (Su[i] − Sd[i])/(Su[i] + Sd[i])
+
+Optimised rolling update
+- For i from N to end:
+  - Su[i] = Su[i − 1] − up[i − N] + up[i]
+  - Sd[i] = Sd[i − 1] − down[i − N] + down[i]
+  - CMO[i] from formula above
+
+5) How to calculate the very first samples
+- You need N daily changes to compute the first CMO, which means N+1 closes.
+- Initialise by summing the first N values of up and down:
+  - Su0 = sum(up[1..N])
+  - Sd0 = sum(down[1..N])
+- First CMO (at index N): CMO[N] = 100 × (Su0 − Sd0)/(Su0 + Sd0)
+- Subsequent CMOs use the rolling update shown above.
+- If you have no change for a day (delta = 0), both up and down are zero, which is fine.
+- Handling the very first price:
+  - You cannot compute delta at i = 0 (no prior close). Start deltas at i = 1.
+  - In Chande’s T‑Bond example (10‑day CMO), the first CMO appears once the first 10 deltas are available. The book shows the first two values computed from Su = 2.0937, Sd = 0.3750 → CMO1 ≈ 69.62 and then Su = 2.25, Sd = 0.3750 → CMO2 ≈ 71.43.
+
+6) Worked numbers (from your Table 5.1, N = 10)
+- First 10‑day totals at 102.7500:
+  - Su = 2.0937
+  - Sd = 0.3750
+  - CMO = 100 × (2.0937 − 0.3750)/(2.0937 + 0.3750) ≈ 69.62
+- Next day (rolling one step):
+  - Su = 2.25, Sd = 0.375 → CMO ≈ 71.43
+- Next day:
+  - Su = 2.2187, Sd = 0.375 → CMO ≈ 71.08
+
+7) About “smoothing” and differences with TA‑Lib
+- What Chande defined:
+  - For CMO, the Su and Sd used in the formula are unsmoothed sums over the last N days.
+  - He explicitly contrasts this with RSI, where Wilder’s smoothing is applied to Su and Sd (i.e., the RSI uses EMAs with α = 1/N).
+- What some software does:
+  - Some packages compute a “CMO” by taking a Wilder‑smoothed RSI and using the identity CMO = 2 × RSI − 100. If the RSI in that identity is Wilder‑smoothed (the standard RSI), the resulting “CMO” is a smoothed variant and will not match Chande’s raw CMO.
+- TA‑Lib specifically:
+  - TA‑Lib’s CMO implementation uses rolling sums of positive and negative deltas over the period (no Wilder smoothing). That is consistent with Chande’s definition above.
+  - TA‑Lib’s RSI, by contrast, uses Wilder’s smoothing (as Chande notes RSI does).
+  - If you see a mismatch between TA‑Lib CMO and numbers from the book, common causes are:
+    - Using 2 × RSI_Wilder − 100 instead of recomputing from raw Su/Sd.
+    - Feeding different inputs (e.g., highs/lows instead of closes).
+    - Off‑by‑one in the lookback (you need N deltas → N+1 closes).
+    - Handling of flat windows (Su + Sd = 0) and rounding differences.
+
+In short: Yes, you are correct that Chande’s original CMO is computed from unsmoothed (raw) sums of up‑ and down‑day momentum. TA‑Lib’s CMO matches that approach; the confusion usually comes from deriving CMO via a Wilder‑smoothed RSI (2 × RSI − 100), which produces a smoothed CMO variant that Chande did not use in his examples.
+
+If you want, I can provide reference code (e.g., in Python, JavaScript or C#) that matches the book’s numbers exactly using your T‑Bond sample.
+
+Below are reference implementations of Chande’s CMO using unsmoothed sums (as in the book). Each prints the three sample values from the T‑Bond 06/93 example (period = 10): 69.62, 71.43, 71.08.
+
+Python
+
+```python
+from typing import List, Optional
+import math
+
+def cmo(closes: List[float], period: int) -> List[Optional[float]]:
+    """
+    Chande Momentum Oscillator (unsmoothed sums).
+    Returns a list aligned with closes; entries before the first value are None.
+    """
+    n = len(closes)
+    out: List[Optional[float]] = [None] * n
+    if period <= 0 or n < period + 1:
+        return out
+
+    # Deltas split into up and down components
+    up = [0.0] * n
+    down = [0.0] * n
+    for i in range(1, n):
+        d = closes[i] - closes[i - 1]
+        if d > 0:
+            up[i] = d
+        elif d < 0:
+            down[i] = -d  # store as positive magnitude
+
+    # Initial window: deltas 1..period
+    su = sum(up[1:period + 1])
+    sd = sum(down[1:period + 1])
+
+    # Compute CMO for i = period .. n-1 (window of deltas [i-period+1 .. i])
+    for i in range(period, n):
+        denom = su + sd
+        out[i] = 0.0 if denom == 0.0 else 100.0 * (su - sd) / denom
+
+        # Slide the window
+        if i + 1 < n:
+            su += up[i + 1] - up[i - period + 1]
+            sd += down[i + 1] - down[i - period + 1]
+
+    return out
+
+
+if __name__ == "__main__":
+    # T‑Bond 06/93 closes from Table 5.1
+    closes = [
+        101.0313, 101.0313, 101.1250, 101.9687, 102.7813, 103.0000,
+        102.9687, 103.0625, 102.9375, 102.7188, 102.7500, 102.9063, 102.9687
+    ]
+    period = 10
+    vals = cmo(closes, period)
+
+    # Print the last three values that appear in the table
+    for i in range(len(closes)):
+        if vals[i] is not None:
+            print(f"{i:02d}  close={closes[i]:8.4f}  CMO={vals[i]:6.2f}")
+```
+
+Go
+
+```go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func CMO(closes []float64, period int) []float64 {
+	n := len(closes)
+	out := make([]float64, n)
+	for i := range out {
+		out[i] = math.NaN()
+	}
+	if period <= 0 || n < period+1 {
+		return out
+	}
+
+	up := make([]float64, n)
+	down := make([]float64, n)
+	for i := 1; i < n; i++ {
+		d := closes[i] - closes[i-1]
+		if d > 0 {
+			up[i] = d
+		} else if d < 0 {
+			down[i] = -d // store as positive magnitude
+		}
+	}
+
+	// Initial window: deltas 1..period
+	su := 0.0
+	sd := 0.0
+	for j := 1; j <= period; j++ {
+		su += up[j]
+		sd += down[j]
+	}
+
+	for i := period; i < n; i++ {
+		denom := su + sd
+		if denom == 0 {
+			out[i] = 0.0
+		} else {
+			out[i] = 100.0 * (su - sd) / denom
+		}
+		if i+1 < n {
+			su += up[i+1] - up[i-period+1]
+			sd += down[i+1] - down[i-period+1]
+		}
+	}
+	return out
+}
+
+func main() {
+	closes := []float64{
+		101.0313, 101.0313, 101.1250, 101.9687, 102.7813, 103.0000,
+		102.9687, 103.0625, 102.9375, 102.7188, 102.7500, 102.9063, 102.9687,
+	}
+	period := 10
+	vals := CMO(closes, period)
+
+	for i := range closes {
+		if !math.IsNaN(vals[i]) {
+			fmt.Printf("%02d  close=%8.4f  CMO=%6.2f\n", i, closes[i], vals[i])
+		}
+	}
+}
+```
+
+Notes
+- Both versions compute the CMO using raw rolling sums of gains and losses over the lookback, matching the book.
+- The first computable index is period (you need period deltas → period+1 closes).
+- The printed values for the example should be approximately 69.62, 71.43 and 71.08 for the last three rows shown.
+
+
+
+Can you check if the following Go implementation is correct:
+```go
+type ChandeMomentumOscillator struct {
+	mu           sync.RWMutex
+	prevSample   float64
+	window       []float64
+	windowGain   float64
+	windowLoss   float64
+	windowLength int
+	windowCount  int
+	primed       bool
+	barFunc      data.BarFunc
+	quoteFunc    data.QuoteFunc
+	tradeFunc    data.TradeFunc
+}
+
+func NewChandeMomentumOscillator(length int) (*ChandeMomentumOscillator, error) {
+	return &ChandeMomentumOscillator{
+		window:       make([]float64, length),
+		windowLength: length,
+		barFunc:      barFunc,
+		quoteFunc:    quoteFunc,
+		tradeFunc:    tradeFunc,
+	}, nil
+}
+
+func (s *ChandeMomentumOscillator) Update(sample float64) float64 {
+	if math.IsNaN(sample) {
+		return sample
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.primed {
+		d := s.window[0]
+		if d < 0 {
+			s.windowLoss += d
+		} else if d > 0 {
+			s.windowGain -= d
+		}
+
+		j := s.windowLength - 1
+		for i := 0; i < j; i++ {
+			s.window[i] = s.window[i+1]
+		}
+
+		d = sample - s.prevSample
+		s.prevSample = sample
+		s.window[j] = d
+
+		if d < 0 {
+			s.windowLoss -= d
+		} else if d > 0 {
+			s.windowGain += d
+		}
+
+		l := s.windowLoss
+		g := s.windowGain
+
+		d = g + l
+		if d == 0 {
+			return 0
+		}
+
+		return 100.0 * (g - l) / d
+	} else {
+		// Not primed.
+		s.windowCount++
+
+		if s.windowCount == 1 { // The very first sample.
+			s.prevSample = sample
+			return math.NaN()
+		}
+
+		d := sample - s.prevSample
+		s.window[s.windowCount-2] = d
+		s.prevSample = sample
+
+		if d < 0 {
+			s.windowLoss -= d
+		} else if d > 0 {
+			s.windowGain += d
+		}
+
+		if s.windowCount <= s.windowLength {
+			return math.NaN()
+		}
+
+		s.primed = true
+
+		l := s.windowLoss
+		g := s.windowGain
+
+		d = g + l
+		if d == 0 {
+			return 0
+		}
+
+		return 100.0 * (g - l) / d
+	}
+}
+```
+
+Short answer
+- Your implementation computes the unsmoothed Chande Momentum Oscillator correctly in principle: it keeps a window of N deltas, maintains running sums of gains and losses, and returns 100*(G−L)/(G+L). It should match Chande’s book if fed the same data and period.
+- There are a few points to tighten up for correctness under edge cases and performance.
+
+What looks right
+- Uses raw (unsmoothed) day‑to‑day deltas.
+- Splits deltas into gain and loss and accumulates magnitudes (loss stored as a positive number via “−d” when d<0).
+- First valid value appears only after N deltas (i.e., N+1 prices).
+- When sliding the window, you correctly subtract the oldest delta from the corresponding sum and add the newest delta to the sums before computing the new CMO.
+
+Things to improve or fix
+1) Clarity and numerical safety on removal
+- In the “primed” path you remove the oldest delta with:
+  - if d < 0 { windowLoss += d } else if d > 0 { windowGain -= d }
+  This is mathematically correct (adding a negative number reduces the loss by |d|), but it’s easy to misread and can go slightly negative due to floating‑point noise after many updates.
+- Prefer an explicit form and clamp to zero:
+  - if d < 0 { windowLoss -= -d } else if d > 0 { windowGain -= d }
+  - after updates: if windowGain < 0 { windowGain = 0 }; if windowLoss < 0 { windowLoss = 0 }.
+
+2) Denominator check
+- Comparing floats to 0 can be fragile. Consider an epsilon:
+  - denom := g + l; if math.Abs(denom) < 1e-12 { return 0 }.
+
+3) Performance
+- Shifting the slice by hand each update is O(N). Use a ring buffer (head index) to achieve O(1) updates.
+
+4) Priming logic
+- Your priming logic is sound (first output after N+1 samples). Add a guard in the constructor to ensure length ≥ 1.
+
+5) Concurrency
+- Update holds a write lock for the whole operation, which is fine for single‑writer streams. If you plan to read the last value concurrently, consider storing the last CMO in the struct and exposing a Value() method protected by an RLock.
+
+A cleaned‑up, ring‑buffer version
+This version is functionally equivalent to yours, but clearer and O(1) per tick.
+
+Go (drop‑in alternative)
+
+```go
+package indicators
+
+import (
+	"math"
+	"sync"
+)
+
+type ChandeMomentumOscillator struct {
+	mu           sync.RWMutex
+	period       int
+	buf          []float64 // ring buffer of last N deltas
+	head         int        // next position to overwrite
+	count        int        // number of prices seen
+	prev         float64    // previous price
+	gainSum      float64    // sum of positive deltas in window
+	lossSum      float64    // sum of |negative deltas| in window
+	primed       bool
+	lastCMO      float64
+}
+
+func NewChandeMomentumOscillator(length int) (*ChandeMomentumOscillator, error) {
+	if length <= 0 {
+		return nil, fmt.Errorf("length must be > 0")
+	}
+	return &ChandeMomentumOscillator{
+		period: length,
+		buf:    make([]float64, length),
+	}, nil
+}
+
+func (s *ChandeMomentumOscillator) Update(price float64) float64 {
+	if math.IsNaN(price) {
+		return price
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.count++
+	if s.count == 1 {
+		s.prev = price
+		s.lastCMO = math.NaN()
+		return s.lastCMO
+	}
+
+	// New delta
+	delta := price - s.prev
+	s.prev = price
+
+	if !s.primed {
+		// Fill until we have N deltas (i.e., N+1 prices)
+		s.buf[s.head] = delta
+		s.head = (s.head + 1) % s.period
+		if delta > 0 {
+			s.gainSum += delta
+		} else if delta < 0 {
+			s.lossSum += -delta
+		}
+		if s.count <= s.period {
+			s.lastCMO = math.NaN()
+			return s.lastCMO
+		}
+		// Now we have exactly N deltas in the buffer
+		s.primed = true
+	} else {
+		// Remove oldest delta and add the new one
+		old := s.buf[s.head]
+		if old > 0 {
+			s.gainSum -= old
+		} else if old < 0 {
+			s.lossSum -= -old
+		}
+		s.buf[s.head] = delta
+		s.head = (s.head + 1) % s.period
+		if delta > 0 {
+			s.gainSum += delta
+		} else if delta < 0 {
+			s.lossSum += -delta
+		}
+		// Clamp to avoid tiny negative sums from FP noise
+		if s.gainSum < 0 {
+			s.gainSum = 0
+		}
+		if s.lossSum < 0 {
+			s.lossSum = 0
+		}
+	}
+
+	den := s.gainSum + s.lossSum
+	if math.Abs(den) < 1e-12 {
+		s.lastCMO = 0
+		return s.lastCMO
+	}
+	s.lastCMO = 100.0 * (s.gainSum - s.lossSum) / den
+	return s.lastCMO
+}
+
+func (s *ChandeMomentumOscillator) Value() float64 {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.lastCMO
+}
+```
+
+Minimal test (matches Table 5.1)
+
+```go
+func TestCMO_TBond(t *testing.T) {
+	closes := []float64{
+		101.0313, 101.0313, 101.1250, 101.9687, 102.7813, 103.0000,
+		102.9687, 103.0625, 102.9375, 102.7188, 102.7500, 102.9063, 102.9687,
+	}
+	cmo, _ := NewChandeMomentumOscillator(10)
+	var got []float64
+	for _, c := range closes {
+		v := cmo.Update(c)
+		if !math.IsNaN(v) {
+			got = append(got, math.Round(v*100)/100) // 2 dp rounding like the book
+		}
+	}
+	want := []float64{69.62, 71.43, 71.08}
+	if len(got) != len(want) {
+		t.Fatalf("got %v values, want %v", len(got), len(want))
+	}
+	for i := range want {
+		if math.Abs(got[i]-want[i]) > 0.01 {
+			t.Fatalf("i=%d got %.2f want %.2f", i, got[i], want[i])
+		}
+	}
+}
+```
+
+Bottom line
+- Your logic is essentially correct and should produce the same numbers as Chande’s unsmoothed CMO. The refactor above improves clarity, avoids O(N) shifts, guards against floating‑point edge cases, and gives you a Value() accessor for concurrent reads.
