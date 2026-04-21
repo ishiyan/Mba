@@ -11,3 +11,9 @@ https://opserver.de/ubb7/ubbthreads.php?ubb=showflat&Number=480080
 
 
 https://www.scribd.com/document/764484905/Merriman-on-Market-Cycles-the-Basics-PDF
+
+https://github.com/adamd1985/quant_research/blob/main/oscilators-quant.ipynb
+
+Analysis of Oscillators as Technical Trading Signals
+https://medium.com/call-for-atlas/analysis-of-oscillators-as-technical-trading-signals-9630bf15e529
+https://github.com/adamd1985/quant_research/blob/main/oscilators-quant.ipynb
